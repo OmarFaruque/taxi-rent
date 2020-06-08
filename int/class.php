@@ -37,4 +37,4 @@ if(!class_exists('taxiClass')){
             require_once($this->plugin_path . 'include/helper.php');
         }
     }
-} //if(!class_exists('taxiClass')){ d
+} //if(!class_exists('taxiClass')){ d f
