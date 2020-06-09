@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Taxi Rent
  * Plugin URI: http://larasoftbd.net/
- * Description: Taxi rent service. Payment via woocommerce.  
+ * Description: Taxi rent service. Payment via woocommerce.jony  
  * Version: 1.0.0
  * Author: larasoft
  * Author URI: https://larasoftbd.net
@@ -21,6 +21,6 @@ define('taxiURL', plugin_dir_url( __FILE__ ));
 
 
 
-// require_once(taxiDIR . 'int/class.php');
+require_once(taxiDIR . 'int/class.php');
 
-// new taxiClass;
+new taxiClass;
