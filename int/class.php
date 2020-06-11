@@ -84,7 +84,6 @@ if(!class_exists('taxiClass')){
         function create_product() {
 
             if ( !wc_get_product( get_option( '_woo_taxi_rent_product' ) ) ) {
-
                 $product_args = array(
                     'post_title' => wc_clean( 'Taxi Rent' ),
                     'post_status' => 'private',
