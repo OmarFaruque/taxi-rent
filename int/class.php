@@ -30,10 +30,54 @@ if(!class_exists('taxiClass')){
             add_action( 'init', array($this, 'create_product' ));
 
             //create custom meta box
-            // add_action( 'add_meta_boxes', array($this, 'vehicle_add_meta_box') );
             // add_action( 'save_post', array($this, 'vehicle_price_save_meta_box_data') );
 
             add_action('init', array($this, 'my_acf_add_local_field_groups'));
+
+            // Booking form Shortcode
+            add_shortcode( 'taxi-booking', array($this, 'taxiBookingFormShortcodeCallback') );
+            add_shortcode( 'taxi-quote', array($this, 'taxiQuoteCallback') );
+
+            // Filter the content
+            add_filter('the_content', array($this, 'addShortcodeToTheContent'));
+
+        }
+
+        /*
+        * Taxi Quote Page Callback
+        */
+        public function taxiQuoteCallback(){
+            ob_start();
+            require_once( $this->plugin_path . 'include/booking-quote.php' );            
+            $output = ob_get_clean();
+            echo $output;
+        }
+
+        /*
+        * Filter The content
+        */
+        public function addShortcodeToTheContent($content){
+            global $post;
+            if($post->ID == get_option('quote_page')){
+                $content = '[taxi-quote]';
+            }
+            
+            return $content;
+
+        }
+
+        /*
+        * Taxi Booking Form Shortcode
+        */
+        public function taxiBookingFormShortcodeCallback(){
+            wp_enqueue_style( 'pe-icon', 'https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css', time(), 'all' );
+            
+            
+
+            ob_start();
+            require_once( $this->plugin_path . 'include/booking-form.php' );            
+            $output = ob_get_clean();
+            echo $output;
         }
 
         /*
@@ -54,9 +98,20 @@ if(!class_exists('taxiClass')){
         * its append add action line 36
         * Appointment backend Script
         */
-        function taxi_rent_backend_script(){
-            wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_backend.css', array(), true, 'all' );
-            wp_enqueue_script( 'TaxiRentJs', $this->plugin_url . 'asset/js/taxi_rent_backend.js', array(), true );
+        function taxi_rent_backend_script($hook){
+
+            // echo 'hook name: ' . $hook . '<br/>';
+            $enque = false;
+            if($hook == 'vichle_page_taxi-settings') $enque = true;
+            if($enque){
+                wp_enqueue_style( 'bootstrap-css', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css', array(), true, 'all' );
+                wp_enqueue_style( 'bootstrap-css-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css', array(), true, 'all' );
+                
+                wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_backend.css', array(), true, 'all' );
+
+                wp_enqueue_script( 'bootstrap-js-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array(), true );
+                wp_enqueue_script( 'TaxiRentJs', $this->plugin_url . 'asset/js/taxi_rent_backend.js', array(), true );
+            }
         }
 
         /*
@@ -64,7 +119,9 @@ if(!class_exists('taxiClass')){
         * Appointment frontend Script
         * And we send All note value in javascript from ajax.
         */
-        function larasoftbd_Note_frontend_script(){
+        function taxi_rent_frontend_script(){
+            wp_enqueue_script( 'jquery-ui-tabs' );
+            wp_enqueue_style( 'jquery-ui-css', 'http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css', time(), 'all' );
             wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_frontend.css', array(), true, 'all' );
             wp_enqueue_script('TaxiRentJS', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery'), time(), true);
         }
@@ -74,7 +131,7 @@ if(!class_exists('taxiClass')){
         * Admin Menu
         */
         function taxi_rent_admin_menu_function(){
-            add_menu_page( 'Taxi Rent', 'Taxi Rent', 'manage_options', 'taxi-rent-menu', array($this, 'submenufunction'), 'dashicons-list-view', 50 );
+            add_submenu_page( 'edit.php?post_type=vichle', 'Taxi Settings', 'Settings', 'manage_options', 'taxi-settings', array($this, 'taxisettingspageCallback'), 'dashicons-list-view', 50 );
         }
 
 
@@ -122,18 +179,61 @@ if(!class_exists('taxiClass')){
                 }
             }
 
-            // Our custom post type
+
+
+            // Careate Vachile post type
+            $this->makeVichlePostType();
+            $this->regtisterVicheleTaxonomy();
+        }
+
+
+        /*
+        * Register Custom taxonomy for Vichle
+        * Reference: https://codex.wordpress.org/Function_Reference/register_taxonomy
+        */
+        private function regtisterVicheleTaxonomy(){
+            // Add new taxonomy, make it hierarchical (like categories)
             $labels = array(
-                'name'               => __( 'Vehicle' ),
-                'singular_name'      => __( 'Vehicle' ),
-                'add_new'            => __( 'Add New Vehicle' ),
-                'add_new_item'       => __( 'Add New Vehicle' ),
-                'edit_item'          => __( 'Edit Vehicle' ),
-                'new_item'           => __( 'Add New Vehicle' ),
-                'view_item'          => __( 'View Vehicle' ),
-                'search_items'       => __( 'Search Vehicle' ),
-                'not_found'          => __( 'No vehicle found' ),
-                'not_found_in_trash' => __( 'No vehicle found in trash' )
+                'name'              => _x( 'Vichle Type', 'taxonomy general name', 'taxi-rent' ),
+                'singular_name'     => _x( 'Vichle Type', 'taxonomy singular name', 'taxi-rent' ),
+                'search_items'      => __( 'Search Vichle Type', 'taxi-rent' ),
+                'all_items'         => __( 'All Vichle Type\'s', 'taxi-rent' ),
+                'parent_item'       => __( 'Parent Vichle Type', 'taxi-rent' ),
+                'parent_item_colon' => __( 'Parent Vichle Type:', 'taxi-rent' ),
+                'edit_item'         => __( 'Edit Vichle Type', 'taxi-rent' ),
+                'update_item'       => __( 'Update Vichle Type', 'taxi-rent' ),
+                'add_new_item'      => __( 'Add New Vichle Type', 'taxi-rent' ),
+                'new_item_name'     => __( 'New Vichle Type Name', 'taxi-rent' ),
+                'menu_name'         => __( 'Vichle Type', 'taxi-rent' ),
+            );
+
+            $args = array(
+                'hierarchical'      => true,
+                'labels'            => $labels,
+                'show_ui'           => true,
+                'show_admin_column' => true,
+                'query_var'         => true,
+                'rewrite'           => array( 'slug' => 'vichle-type' ),
+            );
+
+            register_taxonomy( 'vichle-type', array( 'vichle' ), $args );
+        }
+
+        /*
+        * Register Vichel type as custom post type
+        */
+        private function makeVichlePostType(){
+            $labels = array(
+                'name'               => __( 'Vichle' ),
+                'singular_name'      => __( 'Vichle' ),
+                'add_new'            => __( 'Add New Vichle' ),
+                'add_new_item'       => __( 'Add New Vichle' ),
+                'edit_item'          => __( 'Edit Vichle' ),
+                'new_item'           => __( 'Add New Vichle' ),
+                'view_item'          => __( 'View Vichle' ),
+                'search_items'       => __( 'Search Vichle' ),
+                'not_found'          => __( 'No vichle found' ),
+                'not_found_in_trash' => __( 'No vichle found in trash' )
             );
         
             $supports = array(
@@ -146,47 +246,45 @@ if(!class_exists('taxiClass')){
                 'supports'             => $supports,
                 'public'               => true,
                 'capability_type'      => 'post',
-                'rewrite'              => array( 'slug' => 'vehicle' ),
+                'rewrite'              => array( 'slug' => 'vichle' ),
                 'has_archive'          => true,
                 'menu_position'        => 30,
-                'menu_icon'            => 'dashicons-calendar-alt',
+                'menu_icon'            => $this->plugin_url . 'asset/img/car.png',
             );
         
-            register_post_type( 'vehicle', $args );
-
-
+            register_post_type( 'vichle', $args );
         }
 
         function my_acf_add_local_field_groups() {
-            echo 'jony_acf';
+            // echo 'jony_acf';
 	
             if( function_exists('acf_add_local_field_group') ):
 
                 acf_add_local_field_group(array (
                     'key' => 'vehicle_details',
-                    'title' => 'Vehicle details',
+                    'title' => 'Vichle details',
                     'fields' => array (
                         array (
                             'key' => 'vehicle_details_field_1',
-                            'label' => 'Vehicle capacity number of passengers',
+                            'label' => 'Passenger Capacity',
                             'name' => 'number_of_passengers',
                             'type' => 'number',
                         ),
                         array (
                             'key' => 'vehicle_details_field_2',
-                            'label' => 'Vehicle capacity number of Luggage',
+                            'label' => 'Luggage Capacity',
                             'name' => 'number_of_luggage',
                             'type' => 'number',
                         ),
                         array (
                             'key' => 'vehicle_details_field_3',
-                            'label' => 'Travel distance per km based price',
+                            'label' => 'First Mile Charge',
                             'name' => 'km_based_price',
                             'type' => 'number',
                         ),
                         array (
                             'key' => 'vehicle_details_field_4',
-                            'label' => 'Travel distance per hourly based price',
+                            'label' => 'Price (Per KM)',
                             'name' => 'hourly_based_price',
                             'type' => 'number',
                         ),
@@ -235,7 +333,7 @@ if(!class_exists('taxiClass')){
                             array (
                                 'param' => 'post_type',
                                 'operator' => '==',
-                                'value' => 'vehicle',
+                                'value' => 'vichle',
                             ),
                         ),
                     ),
@@ -250,97 +348,30 @@ if(!class_exists('taxiClass')){
                 endif;
         }
 
-        function vehicle_add_meta_box() {
-            add_meta_box(
-                'vehicleMeta',
-                esc_html__( 'Vehicle details', 'larasoftbd_shopping_cart' ),
-                array($this, 'vehiclecallback'),
-                'vehicle'
-            );
+        
+
+
+        function taxisettingspageCallback(){
+            $this->processSettingsPageRequest();
+            require_once( $this->plugin_path . 'include/settings-page.php' );
         }
 
-        
-        //Vehicle details
-        function vehiclecallback($post){
-            /*
-            * Practie Post type Formate
-            */
-            wp_nonce_field( 'larasoftbd_shopping_cart_meta_box', 'larasoftbd_shopping_cart_meta_box_nonce' );
-            wp_nonce_field( basename( __FILE__ ), 'prfx_nonce' );
-            $prfx_stored_meta = get_post_meta( $post->ID );
-
-            /*
-            * Use get_post_meta() to retrieve an existing value
-            * from the database and use the value for the form.
-            */
-            $number_of_passengers 	            = esc_attr(get_post_meta( $post->ID, 'number_of_passengers', true ));
-            $number_of_luggage               	= esc_attr(get_post_meta( $post->ID, 'number_of_luggage', true ));
-            $km_based_price 	                = esc_attr(get_post_meta( $post->ID, 'km_based_price', true ));
-            $hourly_based_price   	            = esc_attr(get_post_meta( $post->ID, 'hourly_based_price', true ));
+        protected function processSettingsPageRequest(){
 
             
-            //Vehicle capacity number of passengers
-            echo '<label style="width:100%;" for="number_of_passengers">';
-            echo esc_html__( 'Vehicle capacity number of passengers', 'larasoftbd_shopping_cart' );
-            echo '</label> ';
-            echo '<input style="width:100%" type="text" id="number_of_passengers" name="number_of_passengers" value="' .  $number_of_passengers  . '" />';
-            echo '<br/>';
-            echo '<br/>';
+            if(isset($_REQUEST['taxi_settings_button'])){
+                $local_service      = (isset($_REQUEST['local_service']) && $_REQUEST['local_service'] == 'on') ? 1:0;
+                $airport_seaport    = (isset($_REQUEST['airport_seaport']) && $_REQUEST['airport_seaport'] == 'on') ? 1:0;
+                $hourly_rent        = (isset($_REQUEST['hourly_rent']) && $_REQUEST['hourly_rent'] == 'on') ? 1:0;
+                $quote_page         = $_REQUEST['quote_page'];
 
-            //Vehicle capacity number of Luggage
-            echo '<label style="width:100%;" for="number_of_luggage">';
-            echo esc_html__( 'Vehicle capacity number of Luggage', 'larasoftbd_shopping_cart' );
-            echo '</label> ';
-            echo '<input style="width:100%" type="text" id="number_of_luggage" name="number_of_luggage" value="' .  $number_of_luggage  . '" />';
-            echo '<br/>';
-            echo '<br/>';
+                
+                update_option( 'local_service', $local_service );
+                update_option( 'airport_seaport', $airport_seaport );
+                update_option( 'hourly_rent', $hourly_rent );
+                update_option( 'quote_page', $quote_page);
+            }
 
-            //Travel distance per km based price
-            echo '<label style="width:100%;" for="km_based_price">';
-            echo esc_html__( 'Travel distance per km based price', 'larasoftbd_shopping_cart' );
-            echo '</label> ';
-            echo '<input style="width:100%" type="text" id="km_based_price" name="km_based_price" value="' .  $km_based_price  . '" />';
-            echo '<br/>';
-            echo '<br/>';
-
-            //Travel distance per hourly based price
-            echo '<label style="width:100%;" for="hourly_based_price">';
-            echo esc_html__( 'Travel distance per hourly based price', 'larasoftbd_shopping_cart' );
-            echo '</label> ';
-            echo '<input style="width:100%" type="text" id="hourly_based_price" name="hourly_based_price" value="' .  $hourly_based_price  . '" />';
-            echo '<br/>';
-            echo '<br/>';
-        }
-
-        /**
-         * When the post is saved, saves our custom data.
-         *
-         * @param int $post_id The ID of the post being saved.
-         */
-        function vehicle_price_save_meta_box_data( $post_id ) {
-
-            // Sanitize user input.
-            $my_data_text_number_of_passengers 	    = sanitize_text_field( $_POST['number_of_passengers'] );
-            $my_data_text_number_of_luggage 	    = sanitize_text_field( $_POST['number_of_luggage'] );
-            $my_data_text_km_based_price 	        = sanitize_text_field( $_POST['km_based_price'] );
-            $my_data_text_hourly_based_price 	    = sanitize_text_field( $_POST['hourly_based_price'] );
-
-            // Update the meta field in the database.
-            update_post_meta( $post_id, 'number_of_passengers', $my_data_text_number_of_passengers );
-            update_post_meta( $post_id, 'number_of_luggage', $my_data_text_number_of_luggage );
-            update_post_meta( $post_id, 'km_based_price', $my_data_text_km_based_price );
-            update_post_meta( $post_id, 'hourly_based_price', $my_data_text_hourly_based_price );
-        }
-
-
-        function submenufunction(){
-
-
-            echo 'this is me!';
-
-            echo '<pre>';
-            print_r( get_option( '_woo_taxi_rent_product' ) );
-            echo '</pre>';
         }
 
 
