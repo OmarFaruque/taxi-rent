@@ -2,3 +2,11 @@ div#way > label {
     display: inline-block;
 }
 .w-100{width: 100%;}
+
+.single-vicle div.image-vicle {
+    max-width: 30%;
+}
+
+.single-vicle > div{
+    display: inline-block;
+}

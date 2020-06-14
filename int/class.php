@@ -270,22 +270,28 @@ if(!class_exists('taxiClass')){
                             'name' => 'number_of_passengers',
                             'type' => 'number',
                         ),
-                        array (
+                        array(
                             'key' => 'vehicle_details_field_2',
                             'label' => 'Luggage Capacity',
                             'name' => 'number_of_luggage',
                             'type' => 'number',
                         ),
-                        array (
+                        array(
                             'key' => 'vehicle_details_field_3',
                             'label' => 'First Mile Charge',
-                            'name' => 'km_based_price',
+                            'name' => 'first_mile_price',
                             'type' => 'number',
                         ),
-                        array (
+                        array(
                             'key' => 'vehicle_details_field_4',
                             'label' => 'Price (Per KM)',
-                            'name' => 'hourly_based_price',
+                            'name' => 'price',
+                            'type' => 'number',
+                        ),
+                        array(
+                            'key' => 'vehicle_details_field_5',
+                            'label' => 'Hourly Price (Per Hour)',
+                            'name' => 'hr_price',
                             'type' => 'number',
                         ),
                         array (	
