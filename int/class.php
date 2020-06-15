@@ -369,6 +369,7 @@ if(!class_exists('taxiClass')){
                 $local_service      = (isset($_REQUEST['local_service']) && $_REQUEST['local_service'] == 'on') ? 1:0;
                 $airport_seaport    = (isset($_REQUEST['airport_seaport']) && $_REQUEST['airport_seaport'] == 'on') ? 1:0;
                 $hourly_rent        = (isset($_REQUEST['hourly_rent']) && $_REQUEST['hourly_rent'] == 'on') ? 1:0;
+                $taxi_vat           = isset($_REQUEST['taxi_vat']) ? $_REQUEST['taxi_vat']:0;
                 $quote_page         = $_REQUEST['quote_page'];
 
                 
@@ -376,6 +377,8 @@ if(!class_exists('taxiClass')){
                 update_option( 'airport_seaport', $airport_seaport );
                 update_option( 'hourly_rent', $hourly_rent );
                 update_option( 'quote_page', $quote_page);
+                update_option( 'taxi_vat', $taxi_vat);
+                
             }
 
         }

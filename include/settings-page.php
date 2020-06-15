@@ -8,6 +8,7 @@ $local_service = get_option( 'local_service', 1 );
 $airport_seaport = get_option( 'airport_seaport', 1 );
 $hourly_rent = get_option( 'hourly_rent', 1 );
 $quote_page = get_option('quote_page');
+$taxi_vat = get_option('taxi_vat');
 
 ?>
 <div id="taxi_wrap" class="pt-3 bg-white">
@@ -52,16 +53,29 @@ $quote_page = get_option('quote_page');
                     <?php _e('Select a Quote Page', 'taxi-rent'); ?>&nbsp; </label>
                 </td>
                 <td>
-                    
-                    <select name="quote_page" class="form-control" id="quote_page">
-                        <option value=""><?php _e('Select a page as Quote', 'taxi-rent'); ?></option>
-                        <?php
-                            foreach(get_all_page_ids() as $spage){
-                                $selected = ($quote_page == $spage) ? 'selected':'';
-                                echo '<option '.$selected.' value="'.$spage.'">'. get_the_title($spage) .'</option>';
-                            }
-                        ?>
-                    </select>
+                    <div class="form-group">
+                        <select name="quote_page" class="form-control" id="quote_page">
+                            <option value=""><?php _e('Select a page as Quote', 'taxi-rent'); ?></option>
+                            <?php
+                                foreach(get_all_page_ids() as $spage){
+                                    $selected = ($quote_page == $spage) ? 'selected':'';
+                                    echo '<option '.$selected.' value="'.$spage.'">'. get_the_title($spage) .'</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                <label for="taxi_vat">
+                    <?php _e('Vat as Percentage(%)', 'taxi-rent'); ?>&nbsp; </label>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="number" value="<?php echo $taxi_vat; ?>" min="0" step="0.01" name="taxi_vat" id="taxi_vat" class="form-control">
+                    </div>
                 </td>
             </tr>
         

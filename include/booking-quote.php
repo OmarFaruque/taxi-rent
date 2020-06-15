@@ -64,9 +64,16 @@ echo '</pre>';
                                 $firstMilePrice = 0;
                                 $price = 0;
                                 if($distance > 1000){
-                                    $price =  
+                                    $price = get_field('first_mile_price', $sv->ID);
+                                    $distance = $distance - 1000;
                                 }
-                              
+
+                                if(get_field('price', $sv->ID)){
+                                  $price_per_mitr = number_format(get_field('price', $sv->ID) / 1000, 2);
+                                  $price = number_format(($price_per_mitr * $distance) + $price, 2);
+                                }
+
+                                echo $price;
                               ?>
                           </div>
 
