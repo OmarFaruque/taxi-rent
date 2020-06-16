@@ -121,8 +121,10 @@ if(!class_exists('taxiClass')){
         */
         function taxi_rent_frontend_script(){
             wp_enqueue_script( 'jquery-ui-tabs' );
+            
             wp_enqueue_style( 'jquery-ui-css', 'http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css', time(), 'all' );
             wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_frontend.css', array(), true, 'all' );
+            wp_enqueue_script( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', array('jquery'), time(), true  );
             wp_enqueue_script('TaxiRentJS', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery'), time(), true);
         }
 
@@ -360,6 +362,27 @@ if(!class_exists('taxiClass')){
         function taxisettingspageCallback(){
             $this->processSettingsPageRequest();
             require_once( $this->plugin_path . 'include/settings-page.php' );
+        }
+
+        public function vichle_price($postid){
+                                $distance = $_REQUEST['distance'] ? $_REQUEST['distance'] : 0;
+                                $firstMilePrice = 0;
+                                $price = 0;
+                                if($distance > 1000){
+                                    $price = get_field('first_mile_price', $postid);
+                                    $distance = $distance - 1000;
+                                }
+
+                                if(get_field('price', $postid)){
+                                  $price_per_mitr = get_field('price', $postid) / 1000;
+                                  $price = ($price_per_mitr * $distance) + $price;
+                                }
+
+                                // Add Vat 
+                                $taxi_vat = get_option('taxi_vat', 0);
+                                $price += $price * ($taxi_vat / 100);
+                                $price = number_format($price, 2);
+                                return apply_filters( 'the_vichle_price', $price );
         }
 
         protected function processSettingsPageRequest(){

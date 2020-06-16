@@ -12,7 +12,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
   ));
 }
 
-$distance = $_REQUEST['distance'];
+
 
 echo '<pre>';
 print_r($_REQUEST);
@@ -38,43 +38,40 @@ echo '</pre>';
               <!-- Start Description -->
                <div class="description-desc">
                   <div class="innerdesc">
-                      <h2><?php echo $sv->post_title; ?></h2>
+                      <h4><?php echo $sv->post_title; ?></h4>
                       <div class="vacle-details">
 
                           <!-- Details -->
                           <div class="part-details">
+                              <div class="taxi-shadow">
                               <p class="text-center mb-0">
                               <span class="numberofpassenger">
                                 <span class="number"><?php echo get_field('number_of_passengers', $sv->ID); ?></span>
                                 <?php _e('Passengers', 'taxi-rent'); ?>
                               </span>
                               </p>
-                              <p class="text-center">
+                              <p class="text-center mb-0">
                               <span class="numberofluges">
                                 <span class="number"><?php echo get_field('number_of_luggage', $sv->ID); ?></span>
                                 <?php _e('Luggage', 'taxi-rent'); ?>
                               </span>
                               </p>
+
+                              </div>
                           </div>
 
 
                           <!-- Price -->
-                          <div class="part-details">
-                              <?php 
-                                $firstMilePrice = 0;
-                                $price = 0;
-                                if($distance > 1000){
-                                    $price = get_field('first_mile_price', $sv->ID);
-                                    $distance = $distance - 1000;
-                                }
+                          <div class="part-details price">
+                            <div class="taxi-shadow">
+                              <p class="mb-0 text-center"><span class="price">$ <?php echo $this->vichle_price($sv->ID); ?></span></p>
+                              <p class="text-center mb-0"><span class="vatincluded text-center">(<?php echo sprintf('including %s vat', get_option('taxi_vat', 0) . '%'); ?>)</span></p>
+                            </div>
+                          </div>
 
-                                if(get_field('price', $sv->ID)){
-                                  $price_per_mitr = number_format(get_field('price', $sv->ID) / 1000, 2);
-                                  $price = number_format(($price_per_mitr * $distance) + $price, 2);
-                                }
-
-                                echo $price;
-                              ?>
+                          <!-- Select Button -->
+                          <div class="part-details select-button">
+                              <a href="#" class="btn-taxi-rent btn btn-primar online-payment"><?php _e('Select Car', 'webinar'); ?></a>
                           </div>
 
                       </div>
@@ -86,6 +83,29 @@ echo '</pre>';
       <?php endforeach; ?>
   </div>
 </div>
+
+
+<!-- Online Booking Form  -->
+<div id="dialog-form" title="Create new user">
+  <p class="validateTips">All form fields are required.</p>
+ 
+  <form>
+    <fieldset>
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
+      <label for="email">Email</label>
+      <input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
+ 
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+
+<!-- End Online Booking Form -->
+
 
 
 

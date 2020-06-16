@@ -5,8 +5,47 @@ div#way > label {
 
 .single-vicle div.image-vicle {
     max-width: 30%;
+    width: 250px;
+    float: left;
 }
 
 .single-vicle > div{
     display: inline-block;
+}
+div#vaclelist div.description-desc {
+    width: calc(100% - 250px);
+    float: right;
+}
+
+div#vaclelist div.description-desc div.vacle-details > div {
+    width: 190px;
+    float: left;
+}
+div#vaclelist div.description-desc div.vacle-details > div:last-child{
+    width: 20%;
+}
+
+div.select-button a.btn-taxi-rent {
+    background: #bb1111;
+    color: white;
+}
+.single-vicle {
+    overflow: hidden;
+    background-color: #eee;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+div#vaclelist div.description-desc div.vacle-details div.taxi-shadow {
+    background-color: #ddd;
+    border-radius: 5px;
+    box-shadow: 2px 2px 0.2em #999;
+    margin: 0px 20px 0 0;
+    padding: 5px 0;
+}
+.part-details.select-button {
+    padding: 12px 0;
+}
+.image-vicle {
+    box-shadow: 2px 3px 0.2em #666;
 }
