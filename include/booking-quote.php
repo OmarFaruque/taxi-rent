@@ -86,22 +86,75 @@ echo '</pre>';
 
 
 <!-- Online Booking Form  -->
-<div id="dialog-form" title="Create new user">
-  <p class="validateTips">All form fields are required.</p>
- 
-  <form>
-    <fieldset>
-      <label for="name">Name</label>
-      <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
-      <label for="email">Email</label>
-      <input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
- 
-      <!-- Allow form submission with keyboard without duplicating the dialog button -->
-      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-    </fieldset>
-  </form>
+<div id="online-booking-form" title="<?php _e('Booking Online', 'taxi-rent'); ?>">
+  <div class="form-online-inner">
+        <form action="" method="post">
+              <h3><?php _e('Booking Online Single Trip', 'taxi-rent'); ?></h3>    
+              <p class="details"><?php _e('Please provide us with full additional information about the passenger and the journey', 'taxi-rent'); ?></p>
+
+              <div class="row">
+                  <div class="col-md-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="booking_person"><?php _e('Person making the reservation', 'taxi_rent'); ?></label>
+                      <input type="text" name="booking_person" id="booking_person" class="form-control">
+                    </div>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="company_name"><?php _e('Company Name', 'taxi_rent'); ?></label>
+                      <input type="text" name="company_name" id="company_name" class="form-control">
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="contact_number"><?php _e('Contact Number', 'taxi_rent'); ?></label>
+                      <input type="tel" name="contact_number" id="contact_number" class="form-control">
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="contact_email"><?php _e('Your E-mail Address', 'taxi_rent'); ?></label>
+                      <input type="mail" name="contact_email" id="contact_email" class="form-control">
+                    </div>
+                  </div>
+              </div>
+
+              <hr>
+              <h4><?php _e('Passenger Information', 'text-rent'); ?></h4>
+              <div class="row">
+
+                <!-- Passanger Name -->
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="passenger_name"><?php _e('Lead passenger*', 'taxi_rent'); ?></label>
+                      <input type="text" name="passenger_name" id="passenger_name" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Passanger Contact Number -->
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="passenger_contact_no"><?php _e('Passenger Contact No*', 'taxi_rent'); ?></label>
+                      <input type="tel" name="passenger_contact_no" id="passenger_contact_no" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Number of Passengert -->
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="number_of_passenger"><?php _e('Number of Passenger*', 'taxi_rent'); ?></label>
+                      <input type="text" name="number_of_passenger" id="number_of_passenger" class="form-control">
+                    </div>
+                </div>
+
+              </div>
+        </form>
+  </div>
 </div>
 
 <!-- End Online Booking Form -->

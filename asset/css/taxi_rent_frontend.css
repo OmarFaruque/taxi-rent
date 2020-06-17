@@ -49,3 +49,25 @@ div#vaclelist div.description-desc div.vacle-details div.taxi-shadow {
 .image-vicle {
     box-shadow: 2px 3px 0.2em #666;
 }
+
+div#online-booking-form {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.44);
+    display: block;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    display: none;
+    z-index: 9;
+}
+.form-online-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    margin-top: 50px;
+    border-radius: 5px;
+    margin-left: -100%;
+}
