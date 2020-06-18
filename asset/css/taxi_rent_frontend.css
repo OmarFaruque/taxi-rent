@@ -67,7 +67,7 @@ div#online-booking-form {
     margin: 0 auto;
     background-color: white;
     padding: 30px;
-    margin-top: 50px;
     border-radius: 5px;
     margin-left: -100%;
+    overflow: auto;
 }

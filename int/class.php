@@ -16,8 +16,6 @@ if(!class_exists('taxiClass')){
         }
 
         public function init(){
-            add_action('init', array($this, 'includeAllNecessaryFile'));
-
             //Backend Script
             add_action( 'admin_enqueue_scripts', array($this, 'taxi_rent_backend_script') );
             //Frontend Script
@@ -26,11 +24,9 @@ if(!class_exists('taxiClass')){
             //Add Menu Options
             add_action('admin_menu', array($this, 'taxi_rent_admin_menu_function'));
 
-            //Create product and custom post
-            add_action( 'init', array($this, 'create_product' ));
 
             //create custom meta box
-            // add_action( 'save_post', array($this, 'vehicle_price_save_meta_box_data') );
+            add_action( 'init', array($this, 'createNecesaryPostType'));
 
             add_action('init', array($this, 'my_acf_add_local_field_groups'));
 
@@ -44,10 +40,30 @@ if(!class_exists('taxiClass')){
         }
 
         /*
+        * Woocommerce payment process
+        */
+        protected function woocommercer_payment_process(){
+            $product = get_taxi_product();
+            if ($product) {
+                wc()->cart->empty_cart();
+                wc()->cart->add_to_cart($product->get_id());
+                $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
+
+                
+                wp_safe_redirect($redirect_url);
+                exit();
+            }
+        }
+
+        /*
         * Taxi Quote Page Callback
         */
         public function taxiQuoteCallback(){
             ob_start();
+            if(isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'pay_now'){
+                $this->woocommercer_payment_process();
+            }
+
             require_once( $this->plugin_path . 'include/booking-quote.php' );            
             $output = ob_get_clean();
             echo $output;
@@ -80,12 +96,7 @@ if(!class_exists('taxiClass')){
             echo $output;
         }
 
-        /*
-        * Add files
-        */
-        public function includeAllNecessaryFile(){
-            
-        }
+
 
         /**
         * load plugin files
@@ -137,12 +148,25 @@ if(!class_exists('taxiClass')){
         }
 
 
+       
+
+
+
+        /*
+        * Create Necessary Post Type
+        */
+        public function createNecesaryPostType(){
+            // Careate Vachile post type
+            $this->makeVichlePostType();
+            $this->regtisterVicheleTaxonomy();
+        }
+
+
+
         /**
          * create rechargeable product
          */
         function create_product() {
-
-            if ( !wc_get_product( get_option( '_woo_taxi_rent_product' ) ) ) {
                 $product_args = array(
                     'post_title' => wc_clean( 'Taxi Rent' ),
                     'post_status' => 'private',
@@ -179,13 +203,6 @@ if(!class_exists('taxiClass')){
 
                     update_option( '_woo_taxi_rent_product', $product_id );
                 }
-            }
-
-
-
-            // Careate Vachile post type
-            $this->makeVichlePostType();
-            $this->regtisterVicheleTaxonomy();
         }
 
 

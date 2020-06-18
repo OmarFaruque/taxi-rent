@@ -148,9 +148,80 @@ echo '</pre>';
                 <div class="col-md-6 col-xs-12">
                     <div class="form-group">
                       <label for="number_of_passenger"><?php _e('Number of Passenger*', 'taxi_rent'); ?></label>
-                      <input type="text" name="number_of_passenger" id="number_of_passenger" class="form-control">
+                      <input type="number" name="number_of_passenger" id="number_of_passenger" class="form-control">
                     </div>
                 </div>
+
+                <!-- Number of luggage -->
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="number_of_luggage"><?php _e('Number of Luggage*', 'taxi_rent'); ?></label>
+                      <input type="number" name="number_of_luggage" id="number_of_luggage" class="form-control">
+                    </div>
+                </div>
+              </div>
+
+              <hr>
+              <h4><?php _e('Travel Details', 'text-rent'); ?></h4>
+              <div class="row">
+
+                <!-- Travel Date -->
+                <div class="col-md-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="travel_date_time"><?php _e('Travel Date*', 'taxi_rent'); ?></label>
+                      <input type="text" name="travel_date_time" id="travel_date_time" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Collection Address -->
+                <div class="col-md-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="collection_address"><?php _e('Collection Address', 'taxi_rent'); ?></label>
+                      <textarea name="collection_address" id="collection_address" class="form-control" cols="30" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- Destination  Address -->
+                <div class="col-md-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="destination_address"><?php _e('Destination Address', 'taxi_rent'); ?></label>
+                      <textarea name="destination_address" id="destination_address" class="form-control" cols="30" rows="2"></textarea>
+                    </div>
+                </div>
+
+
+                <!-- Airport & terminal (if applicable) -->
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="airport_terminal"><?php _e('Airport & terminal (if applicable)', 'taxi_rent'); ?></label>
+                      <input type="text" name="airport_terminal" id="airport_terminal" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Flight number ( if known ) -->
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="flight_number"><?php _e('Flight number ( if known )', 'taxi_rent'); ?></label>
+                      <input type="text" name="flight_number" id="flight_number" class="form-control">
+                    </div>
+                </div>
+
+                 <!-- Special request -->
+                 <div class="col-md-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="special_request"><?php _e('Special request', 'taxi_rent'); ?></label>
+                      <textarea name="special_request" id="special_request" class="form-control" cols="30" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-xs-12">
+                  <div class="btn-group" role="group" aria-label="First group">
+                      <input type="submit" class="btn btn-secondary" name="pay_now" id="pay_now" value="<?php _e('Pay Now', 'texi-rent'); ?>">
+                      <input type="submit" class="btn btn-secondary" name="pay_later" id="pay_later" value="<?php _e('Pay Later', 'texi-rent'); ?>">
+                  </div>
+                </div>
+
+
 
               </div>
         </form>
