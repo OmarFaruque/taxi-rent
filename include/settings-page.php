@@ -12,78 +12,40 @@ $taxi_vat = get_option('taxi_vat');
 
 ?>
 <div id="taxi_wrap" class="pt-3 bg-white">
-    <h2><?php _e('Settings', 'taxi-rent'); ?></h2>
-    <form class="settings-form" action="" method="post">
+<?php
+//Get the active tab from the $_GET param
+  $default_tab = null;
+  $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
 
-        <table class="table">
-            <tr>
-                <td>
-                    <label for="local_service"><?php _e('Local Service', 'taxi-rent'); ?></label>
-                </td>
-                <td>
-                    <input name="local_service" id="local_service" type="checkbox" <?php echo ($local_service) ? 'checked': ''; ?> data-toggle="toggle" data-size="sm">
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                <label for="airport_seaport">
-                    <?php _e('Airport & Seaport', 'taxi-rent'); ?>
-                </label>
-                </td>
-                <td>
-                    <input name="airport_seaport" id="airport_seaport" type="checkbox" <?php echo ($airport_seaport) ? 'checked': ''; ?> data-toggle="toggle" data-size="sm">
-                </td>
-            </tr>
+  ?>
+  <!-- Our admin page content should all be inside .wrap -->
+  <div class="wrap">
+    <!-- Print the page title -->
+    <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+    <!-- Here are our tabs -->
+    <nav class="nav-tab-wrapper">
+      <a href="<?php echo admin_url('edit.php?post_type=vichle&page=taxi-settings'); ?>" class="nav-tab <?php echo $tab == null ? 'nav-tab-active':''; ?>"><?php _e('General', 'taxi-rent'); ?></a>
+      <a href="<?php echo admin_url('edit.php?post_type=vichle&page=taxi-settings&tab=airport-list'); ?>" class="nav-tab"><?php _e('Airport List', 'taxi-rent'); ?></a>
+    </nav>
 
 
-            <tr>
-                <td>
-                <label for="hourly_rent">
-                    <?php _e('Hourly Rent', 'taxi-rent'); ?>&nbsp; </label>
-                </td>
-                <td>
-                <input name="hourly_rent" id="hourly_rent" type="checkbox" <?php echo ($hourly_rent) ? 'checked': ''; ?> data-toggle="toggle" data-size="sm">    
-                </td>
-            </tr>
 
-            <tr>
-                <td>
-                <label for="quote_page">
-                    <?php _e('Select a Quote Page', 'taxi-rent'); ?>&nbsp; </label>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <select name="quote_page" class="form-control" id="quote_page">
-                            <option value=""><?php _e('Select a page as Quote', 'taxi-rent'); ?></option>
-                            <?php
-                                foreach(get_all_page_ids() as $spage){
-                                    $selected = ($quote_page == $spage) ? 'selected':'';
-                                    echo '<option '.$selected.' value="'.$spage.'">'. get_the_title($spage) .'</option>';
-                                }
-                            ?>
-                        </select>
-                    </div>
-                </td>
-            </tr>
 
-            <tr>
-                <td>
-                <label for="taxi_vat">
-                    <?php _e('Vat as Percentage(%)', 'taxi-rent'); ?>&nbsp; </label>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <input type="number" value="<?php echo $taxi_vat; ?>" min="0" step="0.01" name="taxi_vat" id="taxi_vat" class="form-control">
-                    </div>
-                </td>
-            </tr>
-        
-        </table>
 
-        
-        
-        <br>
-        <input type="submit" name="taxi_settings_button" class="btn btn-primary" value="<?php _e('Submit', 'taxi-rent'); ?>">
-    </form>
+
+    <div class="tab-content">
+    <?php switch($tab) :
+        case 'airport-list':
+            require_once($this->plugin_path . 'include/admin/airport-list.php');     
+        break;
+        default:
+            require_once($this->plugin_path . 'include/admin/general-settings.php'); 
+    endswitch; ?>
+    </div>
+  </div>
+
 </div>
+
+
+
+

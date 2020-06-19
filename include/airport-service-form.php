@@ -10,12 +10,12 @@ $quote_url = get_the_permalink( get_option('quote_page') );
 <form action="<?php echo $quote_url; ?>" method="post">
     <?php wp_nonce_field( 1, 'taxi_booking_nonce' ); ?>
     <div class="form-group">
-        <label for="pickup"><?php _e('Pick Up', 'taxi-rent'); ?>*</label>
-        <input type="text" class="w-100" name="pickup" id="pickup">
+        <label for="pickup_airport"><?php _e('Pick Up', 'taxi-rent'); ?>*</label>
+        <input type="text" class="w-100" name="pickup_airport" id="pickup_airport">
     </div>
     <div class="form-group">
         <label for="destination"><?php _e('Destination', 'taxi-rent'); ?>*</label>
-        <input type="text" class="w-100" name="destination" id="destination">
+        <input type="text" class="w-100" name="destination_airport" id="destination_airport">
     </div>
     <div class="form-group" id="way">
         <label for="one_way">

@@ -15,12 +15,14 @@ jQuery(document).ready(function(e){
 
 
     jQuery(document).on('click', 'a.online-payment', function(e){
-        console.log('test omar');
+        var rent_amount = jQuery(this).data('amount')
         e.preventDefault();
         var bodywidth = jQuery(document.body).width();
         jQuery('div#online-booking-form').fadeIn('slow', function(){
-          var formwidth = jQuery('div#online-booking-form > div.form-online-inner').outerWidth(),
+          var form = jQuery('div#online-booking-form > div.form-online-inner form'),
+          formwidth = jQuery('div#online-booking-form > div.form-online-inner').outerWidth(),
           marginLeft = (bodywidth - formwidth) / 2;
+          form.find('input[name="taxi_rent_amount"]').val(rent_amount);
           jQuery('div#online-booking-form > div.form-online-inner').animate({
             marginLeft: marginLeft + 'px' 
           })

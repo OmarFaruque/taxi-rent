@@ -27,8 +27,8 @@ if(!class_exists('taxiClass')){
 
             //create custom meta box
             add_action( 'init', array($this, 'createNecesaryPostType'));
-
             add_action('init', array($this, 'my_acf_add_local_field_groups'));
+            add_action('init', array($this, 'paymentFormSubmit'));
 
             // Booking form Shortcode
             add_shortcode( 'taxi-booking', array($this, 'taxiBookingFormShortcodeCallback') );
@@ -37,7 +37,63 @@ if(!class_exists('taxiClass')){
             // Filter the content
             add_filter('the_content', array($this, 'addShortcodeToTheContent'));
 
+            add_action('woocommerce_before_calculate_totals', array($this, 'woo_taxi_set_product_price'));
+            add_filter('woocommerce_add_to_cart_validation', array($this, 'restrict_other_from_add_to_cart'), 20);
+            add_filter('woocommerce_is_purchasable', array($this, 'make_taxi_rent_product_purchasable'), 10, 2);
+
         }
+
+
+        /**
+         * Make rechargeable product purchasable
+         * @param boolean $is_purchasable
+         * @param WC_Product object $product
+         * @return boolean
+         */
+        public function make_taxi_rent_product_purchasable($is_purchasable, $product) {
+            $wallet_product = get_taxi_product();
+            if ($wallet_product) {
+                if ($wallet_product->get_id() == $product->get_id()) {
+                    $is_purchasable = true;
+                }
+            }
+            return $is_purchasable;
+        }
+
+
+        /**
+         * Set topup product price at run time
+         * @param OBJECT $cart
+         * @return NULL
+         */
+        public function woo_taxi_set_product_price($cart) {
+            $product = get_taxi_product();
+            if (!$product && empty($cart->cart_contents)) {
+                return;
+            }
+            foreach ($cart->cart_contents as $key => $value) {
+                if (isset($value['taxi_rent_amount']) && $value['taxi_rent_amount'] && $product->get_id() == $value['product_id']) {
+                    $value['data']->set_price($value['taxi_rent_amount']);
+                }
+            }
+        }
+
+
+        /**
+         * Restrict customer to order other product along with rechargeable product
+         * @param boolean $valid
+         * @return boolean
+         */
+        public function restrict_other_from_add_to_cart($valid) {
+            
+            if (is_wallet_rechargeable_cart()) {
+                wc_add_notice(apply_filters('woo_taxi_restrict_other_from_add_to_cart', __('You can not add another product while your cart contains with taxi product.', 'taxi-rent')), 'error');
+                $valid = false;
+            }
+            return $valid;
+        }
+
+
 
         /*
         * Woocommerce payment process
@@ -45,25 +101,47 @@ if(!class_exists('taxiClass')){
         protected function woocommercer_payment_process(){
             $product = get_taxi_product();
             if ($product) {
+                add_filter('woocommerce_add_cart_item_data', array($this, 'add_taxi_product_price_to_cart_item_data'), 10, 2);
                 wc()->cart->empty_cart();
+                
                 wc()->cart->add_to_cart($product->get_id());
                 $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
-
-                
                 wp_safe_redirect($redirect_url);
                 exit();
             }
         }
 
+
+
+
+        /**
+         * WooCommerce add cart item data
+         * @param array $cart_item_data
+         * @param int $product_id
+         * @return array
+         */
+        public function add_taxi_product_price_to_cart_item_data($cart_item_data, $product_id) {
+            $product = wc_get_product($product_id);
+            if (isset($_POST['taxi_rent_amount']) && $product) {
+                $taxi_rent_amount = apply_filters('woo_wallet_rechargeable_amount', $_POST['taxi_rent_amount']);
+                $taxi_rent_amount = $taxi_rent_amount;
+                $cart_item_data['taxi_rent_amount'] = $taxi_rent_amount;
+            }
+            return $cart_item_data;
+        }
+
+        /*
+        */
+        public function paymentFormSubmit(){
+            if(isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'pay_now'){
+                $this->woocommercer_payment_process();
+            }
+        }
         /*
         * Taxi Quote Page Callback
         */
         public function taxiQuoteCallback(){
             ob_start();
-            if(isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'pay_now'){
-                $this->woocommercer_payment_process();
-            }
-
             require_once( $this->plugin_path . 'include/booking-quote.php' );            
             $output = ob_get_clean();
             echo $output;
@@ -382,24 +460,32 @@ if(!class_exists('taxiClass')){
         }
 
         public function vichle_price($postid){
-                                $distance = $_REQUEST['distance'] ? $_REQUEST['distance'] : 0;
-                                $firstMilePrice = 0;
-                                $price = 0;
-                                if($distance > 1000){
-                                    $price = get_field('first_mile_price', $postid);
-                                    $distance = $distance - 1000;
-                                }
 
-                                if(get_field('price', $postid)){
-                                  $price_per_mitr = get_field('price', $postid) / 1000;
-                                  $price = ($price_per_mitr * $distance) + $price;
-                                }
+            // echo '<pre>';
+            // print_r($_REQUEST);
+            // echo '</pre>';
 
-                                // Add Vat 
-                                $taxi_vat = get_option('taxi_vat', 0);
-                                $price += $price * ($taxi_vat / 100);
-                                $price = number_format($price, 2);
-                                return apply_filters( 'the_vichle_price', $price );
+            $distance = $_REQUEST['distance'] ? $_REQUEST['distance'] : 0;
+            $firstMilePrice = 0;
+            $price = 0;
+            if($distance > 1000){
+                $price = get_field('first_mile_price', $postid);
+                $distance = $distance - 1000;
+            }
+
+            if(get_field('price', $postid)){
+                $price_per_mitr = get_field('price', $postid) / 1000;
+                $price = ($price_per_mitr * $distance) + $price;
+            }
+
+            // Add Way 
+            if(isset($_REQUEST['way'])) $price = $price * $_REQUEST['way'];
+
+            // Add Vat 
+            $taxi_vat = get_option('taxi_vat', 0);
+            $price += $price * ($taxi_vat / 100);
+            $price = number_format($price, 2);
+            return apply_filters( 'the_vichle_price', $price );
         }
 
         protected function processSettingsPageRequest(){

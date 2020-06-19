@@ -33,7 +33,7 @@ if ( ! function_exists( 'is_taxi_rechargeable_cart' ) ) {
 if(!function_exists('get_taxi_product')){
     function get_taxi_product(){
             if ( !wc_get_product( get_option( '_woo_taxi_rent_product' ) ) ) {
-                $this->create_product();
+                taxiClass::create_product();
             }
             return wc_get_product(apply_filters( 'taxi_product_id', get_option( '_woo_taxi_rent_product' ) ));
     }

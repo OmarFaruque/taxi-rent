@@ -71,7 +71,7 @@ echo '</pre>';
 
                           <!-- Select Button -->
                           <div class="part-details select-button">
-                              <a href="#" class="btn-taxi-rent btn btn-primar online-payment"><?php _e('Select Car', 'webinar'); ?></a>
+                              <a href="#" data-amount="<?php echo $this->vichle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php _e('Select Car', 'webinar'); ?></a>
                           </div>
 
                       </div>
@@ -216,6 +216,7 @@ echo '</pre>';
 
                 <div class="col-md-12 col-xs-12">
                   <div class="btn-group" role="group" aria-label="First group">
+                      <input name="taxi_rent_amount" type="hidden"/>
                       <input type="submit" class="btn btn-secondary" name="pay_now" id="pay_now" value="<?php _e('Pay Now', 'texi-rent'); ?>">
                       <input type="submit" class="btn btn-secondary" name="pay_later" id="pay_later" value="<?php _e('Pay Later', 'texi-rent'); ?>">
                   </div>
