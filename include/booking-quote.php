@@ -7,20 +7,21 @@ $allvicles = array();
 
 if(isset($_REQUEST['taxi_booking_nonce'])){
   $allvicles = get_posts(array(
-    'post_type' => 'vichle', 
+    'post_type' => 'Vehicle', 
     'post_status' => 'publish'
   ));
 }
 
 
 
-echo '<pre>';
-print_r($_REQUEST);
-echo '</pre>';
+// echo '<pre>';
+// print_r($_REQUEST);
+// echo '</pre>';
 
 ?>
-
-<div id="map" style="width:100%; height:500px;"></div>
+<?php if(!isset($_REQUEST['submit_hourly'])): ?>
+  <div id="map" style="width:100%; height:500px;"></div>
+<?php endif; ?>
 <br>
 <div id="vaclelist">
   <div class="inner-bacle-list">
@@ -64,14 +65,14 @@ echo '</pre>';
                           <!-- Price -->
                           <div class="part-details price">
                             <div class="taxi-shadow">
-                              <p class="mb-0 text-center"><span class="price">$ <?php echo $this->vichle_price($sv->ID); ?></span></p>
+                              <p class="mb-0 text-center"><span class="price">$ <?php echo $this->Vehicle_price($sv->ID); ?></span></p>
                               <p class="text-center mb-0"><span class="vatincluded text-center">(<?php echo sprintf('including %s vat', get_option('taxi_vat', 0) . '%'); ?>)</span></p>
                             </div>
                           </div>
 
                           <!-- Select Button -->
                           <div class="part-details select-button">
-                              <a href="#" data-amount="<?php echo $this->vichle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php _e('Select Car', 'webinar'); ?></a>
+                              <a href="#" data-amount="<?php echo $this->Vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php _e('Select Car', 'webinar'); ?></a>
                           </div>
 
                       </div>
@@ -234,7 +235,7 @@ echo '</pre>';
 
 
 
-
+<?php if(!isset($_REQUEST['submit_hourly'])): ?>
 <script>
 var infowindow;
 
@@ -298,4 +299,5 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
 </script>
 
-<?php wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ&libraries=places&callback=initMap', time(), true ); ?>
+<?php wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key='.get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ').'&libraries=places&callback=initMap', time(), true ); ?>
+<?php endif; ?>

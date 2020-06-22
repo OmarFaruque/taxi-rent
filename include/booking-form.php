@@ -9,7 +9,7 @@
     <ul>
         <li><a href="#local_service"><?php _e('Local Service', 'taxi-rent'); ?></a></li>
         <li><a href="#airport-service"><?php _e('Airport & Seaport', 'taxi-rent'); ?></a></li>
-        <li><a href="#tabs-3"><?php _e('Hourly Rent', 'taxi-rent'); ?></a></li>
+        <li><a href="#hourly"><?php _e('Hourly Rent', 'taxi-rent'); ?></a></li>
     </ul>
     <div id="local_service">
         <?php require_once($this->plugin_path . 'include/local-service-form.php'); ?>
@@ -17,8 +17,19 @@
     <div id="airport-service">
     <?php require_once($this->plugin_path . 'include/airport-service-form.php'); ?>
     </div>
-    <div id="tabs-3">
-        <p>Demo...</p>
+    <div id="hourly">
+        <div id="hourlyForm">
+          <form method="post" action="<?php echo get_the_permalink( get_option('quote_page') ); ?>" id="hourlyF">
+          <?php wp_nonce_field( 1, 'taxi_booking_nonce' ); ?>
+              <div class="form-group">
+                  <label for="hours"><?php _e('Hours', 'taxi-rent'); ?></label>
+                  <input type="number" step="1" min="1" name="hours" id="hours" class="form-control">
+              </div>
+
+              <br>
+              <input name="submit_hourly" type="submit" value="<?php _e('Show price & book online', 'taxi-rent'); ?>" class="btn btn-primary">
+          </form>
+        </div>
     </div>
     </div>
 </div>
@@ -45,9 +56,12 @@ function initMap() {
 }
 
 function AutocompleteDirectionsHandler(map) {
+  var me = this;
   this.map = map;
   this.originPlaceId = null;
   this.destinationPlaceId = null;
+  this.airportPickup = null;
+  this.airportDistination = null;
   this.travelMode = 'DRIVING';
 
 
@@ -67,19 +81,121 @@ function AutocompleteDirectionsHandler(map) {
   var destinationAutocomplete = new google.maps.places.Autocomplete(
     destinationInput, {
       fields: ['place_id', 'name', 'types']
-    });
+  });
+
+  // Airport & Seaport
+  var airportPickupAutocomplete = new google.maps.places.Autocomplete(
+    pickup_airport, {
+      fields: ['place_id', 'name', 'types']
+  });
+
+  // Airport & Seaport
+  var airportDestinationAutocomplete = new google.maps.places.Autocomplete(
+    destination_airport, {
+      fields: ['place_id', 'name', 'types']
+  });
 
   this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
   this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+
+  
+
+  jQuery(document.body).on('change', 'select[name="destination_airport"], input[name="destination_airport"], input[name="pickup_airport"], select[name="pickup_airport"]', function(){
+    // Search for Google's office in Australia.
+    setTimeout(function() {
+
+    var pickupSelect = jQuery('select#pickup_airport_select');
+    if(pickupSelect.is(':disabled')){
+      var pickup = jQuery('input[name="pickup_airport"]').val(),
+      port_distination = jQuery('select[name="destination_airport"]').val();
+    }else{
+      var pickup = jQuery('select[name="pickup_airport"]').val(),
+      port_distination = jQuery('input[name="destination_airport"]').val();
+    }
+    
+    
+    
+    var service = new google.maps.places.PlacesService(map);
+      if(pickup != '' && pickupSelect.is(':disabled')){
+        var request = {
+          location: map.getCenter(),
+          radius: '500',
+          query: pickup
+        };
+        service.textSearch(request, function(results, status){
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            me.airportPickup =  results[0].place_id;
+            localStorage.setItem("pickup_id", results[0].place_id);
+          }
+        });
+      }else{
+          me.airportPickup =  pickup;
+          localStorage.setItem("pickup_id", pickup);
+      }
+    
+      if(port_distination != '' && pickupSelect.is(':disabled')){
+        me.airportDistination =  port_distination;
+        localStorage.setItem("destination_id", port_distination);
+      }else if(port_distination != ''){
+          // Get place id via text search on google
+          var request = {
+            location: map.getCenter(),
+            radius: '500',
+            query: port_distination
+          };
+          service.textSearch(request, function(results, status){
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+              me.airportDistination =  results[0].place_id;
+              localStorage.setItem("destination_id", results[0].place_id);
+            }
+          });
+      }
+      me.airputroute();
+  }, 4000);
+  });
 }
+
+
+
+AutocompleteDirectionsHandler.prototype.airputroute = function() {
+  // console.log(localStorage.getItem('destination_id'));
+  if (!this.airportPickup || !this.airportDistination) {
+    return;
+  }
+  var me = this;
+
+  this.directionsService.route({
+    origin: {
+      'placeId': this.airportPickup
+    },
+    destination: {
+      'placeId': this.airportDistination
+    },
+    travelMode: this.travelMode
+  }, function(response, status) {
+    if (status === 'OK') {
+      jQuery('form#portForm').find('input[name="distance"]').val(response.routes[0].legs[0].distance.value);
+      jQuery('form#portForm').find('input[type="submit"]').prop('disabled', false);
+    } else {
+      window.alert('Directions request failed due to ' + status);
+    }
+  });
+};
 
 // Sets a listener on a radio button to change the filter type on Places
 // Autocomplete.
 AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
+  
   var me = this;
   autocomplete.bindTo('bounds', this.map);
+
+
+
+
   autocomplete.addListener('place_changed', function() {
     var place = autocomplete.getPlace();
+    
     if (!place.place_id) {
       window.alert("Please select an option from the dropdown list.");
       return;
@@ -93,7 +209,6 @@ AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(aut
     }
     me.route();
   });
-
 };
 
 AutocompleteDirectionsHandler.prototype.route = function() {
@@ -125,8 +240,12 @@ AutocompleteDirectionsHandler.prototype.route = function() {
   });
 };
 
+
+
+
 jQuery( function() {
     jQuery( "#tabs" ).tabs();
+
 });
 </script>
 

@@ -9,6 +9,7 @@ $airport_seaport = get_option( 'airport_seaport', 1 );
 $hourly_rent = get_option( 'hourly_rent', 1 );
 $quote_page = get_option('quote_page');
 $taxi_vat = get_option('taxi_vat');
+$map_api = get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ');
 
 ?>
 <div id="taxi_wrap" class="pt-3 bg-white">
@@ -24,8 +25,8 @@ $taxi_vat = get_option('taxi_vat');
     <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
     <!-- Here are our tabs -->
     <nav class="nav-tab-wrapper">
-      <a href="<?php echo admin_url('edit.php?post_type=vichle&page=taxi-settings'); ?>" class="nav-tab <?php echo $tab == null ? 'nav-tab-active':''; ?>"><?php _e('General', 'taxi-rent'); ?></a>
-      <a href="<?php echo admin_url('edit.php?post_type=vichle&page=taxi-settings&tab=airport-list'); ?>" class="nav-tab"><?php _e('Airport List', 'taxi-rent'); ?></a>
+      <a href="<?php echo admin_url('edit.php?post_type=vehicle&page=taxi-settings'); ?>" class="nav-tab <?php echo $tab == null ? 'nav-tab-active':''; ?>"><?php _e('General', 'taxi-rent'); ?></a>
+      <a href="<?php echo admin_url('edit.php?post_type=vehicle&page=taxi-settings&tab=airport-list'); ?>" class="nav-tab"><?php _e('Airport List', 'taxi-rent'); ?></a>
     </nav>
 
 

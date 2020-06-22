@@ -62,7 +62,20 @@
                     </div>
                 </td>
             </tr>
-        
+
+            <!-- Google Map Api -->
+            <tr>
+                <td>
+                <label for="taxi_vat">
+                    <?php _e('Google Map API', 'taxi-rent'); ?>&nbsp; </label>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" value="<?php echo $map_api; ?>" name="map_api" id="map_api" class="form-control">
+                    </div>
+                </td>
+            </tr>
+
         </table>
 
         

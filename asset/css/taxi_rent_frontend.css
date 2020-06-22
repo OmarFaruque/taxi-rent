@@ -71,3 +71,13 @@ div#online-booking-form {
     margin-left: -100%;
     overflow: auto;
 }
+form#portForm select:disabled,
+form#portForm input[type="text"]:disabled{
+    display: none;
+}
+
+div#switchDirection img {
+    max-width: 40px;
+    margin: 10px 0;
+    cursor: pointer;
+}

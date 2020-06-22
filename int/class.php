@@ -41,8 +41,68 @@ if(!class_exists('taxiClass')){
             add_filter('woocommerce_add_to_cart_validation', array($this, 'restrict_other_from_add_to_cart'), 20);
             add_filter('woocommerce_is_purchasable', array($this, 'make_taxi_rent_product_purchasable'), 10, 2);
 
+            
+            // Ajax Actions
+            add_action( 'wp_ajax_addNewAirportListByAjax', array($this, 'addNewAirportListByAjax') );
+            // Delete Airport List bya Ajax 
+            add_action( 'wp_ajax_deleteAirportListItemByAjax', array($this, 'deleteAirportListItemByAjax') );
+
         }
 
+
+
+        /*
+        * Delete airport List 
+        */
+        public function deleteAirportListItemByAjax(){
+
+            $airportList = get_option( 'portlists');
+            $airportList = $airportList ? json_decode($airportList) : array();
+            $airportList = (array)$airportList;
+
+            $success = false;
+            if(array_key_exists($_POST['place_id'], $airportList)){
+                
+                unset($airportList[$_POST['place_id']]);
+                $airportList = json_encode( $airportList );
+                update_option( 'portlists', $airportList );
+                $success = true;
+            }
+
+            $msg = $success ? 'success' : 'fail';
+            wp_send_json( array(
+                'msg' => $msg
+            ) );
+            wp_die();
+        }
+
+
+
+        /*
+        * Ajax Action for add airport list
+        */
+        public function addNewAirportListByAjax(){
+            $airportList = get_option( 'portlists');
+            $airportList = $airportList ? json_decode($airportList) : array();
+            $airportList = (array)$airportList;
+            $place_id = $_POST['place_id'];
+            
+            $success = false;
+            if(!array_key_exists($place_id, $airportList)){
+                $airportList[$place_id] = $_POST['address'];
+                $success = true;
+            }
+            $airportList = json_encode($airportList);
+            update_option('portlists', $airportList);
+            
+            $msg = $success ? 'success' : 'fail';
+            wp_send_json( array(
+                'msg' => $msg,
+                'posts' => $_POST,
+                'lists' => $airportList
+            ) );
+            wp_die();
+        }
 
         /**
          * Make rechargeable product purchasable
@@ -188,10 +248,8 @@ if(!class_exists('taxiClass')){
         * Appointment backend Script
         */
         function taxi_rent_backend_script($hook){
-
-            // echo 'hook name: ' . $hook . '<br/>';
             $enque = false;
-            if($hook == 'vichle_page_taxi-settings') $enque = true;
+            if($hook == 'vehicle_page_taxi-settings') $enque = true;
             if($enque){
                 wp_enqueue_style( 'bootstrap-css', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css', array(), true, 'all' );
                 wp_enqueue_style( 'bootstrap-css-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css', array(), true, 'all' );
@@ -200,6 +258,11 @@ if(!class_exists('taxiClass')){
 
                 wp_enqueue_script( 'bootstrap-js-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array(), true );
                 wp_enqueue_script( 'TaxiRentJs', $this->plugin_url . 'asset/js/taxi_rent_backend.js', array(), true );
+                wp_localize_script( 'TaxiRentJs', 'admin_ajax',
+                    array( 
+                        'ajaxurl' => admin_url( 'admin-ajax.php' )
+                    )
+                );
             }
         }
 
@@ -222,7 +285,7 @@ if(!class_exists('taxiClass')){
         * Admin Menu
         */
         function taxi_rent_admin_menu_function(){
-            add_submenu_page( 'edit.php?post_type=vichle', 'Taxi Settings', 'Settings', 'manage_options', 'taxi-settings', array($this, 'taxisettingspageCallback'), 'dashicons-list-view', 50 );
+            add_submenu_page( 'edit.php?post_type=vehicle', 'Taxi Settings', 'Settings', 'manage_options', 'taxi-settings', array($this, 'taxisettingspageCallback'), 'dashicons-list-view', 50 );
         }
 
 
@@ -235,7 +298,7 @@ if(!class_exists('taxiClass')){
         */
         public function createNecesaryPostType(){
             // Careate Vachile post type
-            $this->makeVichlePostType();
+            $this->makeVehiclePostType();
             $this->regtisterVicheleTaxonomy();
         }
 
@@ -285,23 +348,23 @@ if(!class_exists('taxiClass')){
 
 
         /*
-        * Register Custom taxonomy for Vichle
+        * Register Custom taxonomy for Vehicle
         * Reference: https://codex.wordpress.org/Function_Reference/register_taxonomy
         */
         private function regtisterVicheleTaxonomy(){
             // Add new taxonomy, make it hierarchical (like categories)
             $labels = array(
-                'name'              => _x( 'Vichle Type', 'taxonomy general name', 'taxi-rent' ),
-                'singular_name'     => _x( 'Vichle Type', 'taxonomy singular name', 'taxi-rent' ),
-                'search_items'      => __( 'Search Vichle Type', 'taxi-rent' ),
-                'all_items'         => __( 'All Vichle Type\'s', 'taxi-rent' ),
-                'parent_item'       => __( 'Parent Vichle Type', 'taxi-rent' ),
-                'parent_item_colon' => __( 'Parent Vichle Type:', 'taxi-rent' ),
-                'edit_item'         => __( 'Edit Vichle Type', 'taxi-rent' ),
-                'update_item'       => __( 'Update Vichle Type', 'taxi-rent' ),
-                'add_new_item'      => __( 'Add New Vichle Type', 'taxi-rent' ),
-                'new_item_name'     => __( 'New Vichle Type Name', 'taxi-rent' ),
-                'menu_name'         => __( 'Vichle Type', 'taxi-rent' ),
+                'name'              => _x( 'Vehicle Type', 'taxonomy general name', 'taxi-rent' ),
+                'singular_name'     => _x( 'Vehicle Type', 'taxonomy singular name', 'taxi-rent' ),
+                'search_items'      => __( 'Search Vehicle Type', 'taxi-rent' ),
+                'all_items'         => __( 'All Vehicle Type\'s', 'taxi-rent' ),
+                'parent_item'       => __( 'Parent Vehicle Type', 'taxi-rent' ),
+                'parent_item_colon' => __( 'Parent Vehicle Type:', 'taxi-rent' ),
+                'edit_item'         => __( 'Edit Vehicle Type', 'taxi-rent' ),
+                'update_item'       => __( 'Update Vehicle Type', 'taxi-rent' ),
+                'add_new_item'      => __( 'Add New Vehicle Type', 'taxi-rent' ),
+                'new_item_name'     => __( 'New Vehicle Type Name', 'taxi-rent' ),
+                'menu_name'         => __( 'Vehicle Type', 'taxi-rent' ),
             );
 
             $args = array(
@@ -310,27 +373,27 @@ if(!class_exists('taxiClass')){
                 'show_ui'           => true,
                 'show_admin_column' => true,
                 'query_var'         => true,
-                'rewrite'           => array( 'slug' => 'vichle-type' ),
+                'rewrite'           => array( 'slug' => 'Vehicle-type' ),
             );
 
-            register_taxonomy( 'vichle-type', array( 'vichle' ), $args );
+            register_taxonomy( 'Vehicle-type', array( 'Vehicle' ), $args );
         }
 
         /*
         * Register Vichel type as custom post type
         */
-        private function makeVichlePostType(){
+        private function makeVehiclePostType(){
             $labels = array(
-                'name'               => __( 'Vichle' ),
-                'singular_name'      => __( 'Vichle' ),
-                'add_new'            => __( 'Add New Vichle' ),
-                'add_new_item'       => __( 'Add New Vichle' ),
-                'edit_item'          => __( 'Edit Vichle' ),
-                'new_item'           => __( 'Add New Vichle' ),
-                'view_item'          => __( 'View Vichle' ),
-                'search_items'       => __( 'Search Vichle' ),
-                'not_found'          => __( 'No vichle found' ),
-                'not_found_in_trash' => __( 'No vichle found in trash' )
+                'name'               => __( 'Vehicle' ),
+                'singular_name'      => __( 'Vehicle' ),
+                'add_new'            => __( 'Add New Vehicle' ),
+                'add_new_item'       => __( 'Add New Vehicle' ),
+                'edit_item'          => __( 'Edit Vehicle' ),
+                'new_item'           => __( 'Add New Vehicle' ),
+                'view_item'          => __( 'View Vehicle' ),
+                'search_items'       => __( 'Search Vehicle' ),
+                'not_found'          => __( 'No Vehicle found' ),
+                'not_found_in_trash' => __( 'No Vehicle found in trash' )
             );
         
             $supports = array(
@@ -343,13 +406,13 @@ if(!class_exists('taxiClass')){
                 'supports'             => $supports,
                 'public'               => true,
                 'capability_type'      => 'post',
-                'rewrite'              => array( 'slug' => 'vichle' ),
+                'rewrite'              => array( 'slug' => 'vehicle' ),
                 'has_archive'          => true,
                 'menu_position'        => 30,
                 'menu_icon'            => $this->plugin_url . 'asset/img/car.png',
             );
         
-            register_post_type( 'vichle', $args );
+            register_post_type( 'vehicle', $args );
         }
 
         function my_acf_add_local_field_groups() {
@@ -359,7 +422,7 @@ if(!class_exists('taxiClass')){
 
                 acf_add_local_field_group(array (
                     'key' => 'vehicle_details',
-                    'title' => 'Vichle details',
+                    'title' => 'Vehicle details',
                     'fields' => array (
                         array (
                             'key' => 'vehicle_details_field_1',
@@ -436,7 +499,7 @@ if(!class_exists('taxiClass')){
                             array (
                                 'param' => 'post_type',
                                 'operator' => '==',
-                                'value' => 'vichle',
+                                'value' => 'vehicle',
                             ),
                         ),
                     ),
@@ -459,7 +522,7 @@ if(!class_exists('taxiClass')){
             require_once( $this->plugin_path . 'include/settings-page.php' );
         }
 
-        public function vichle_price($postid){
+        public function Vehicle_price($postid){
 
             // echo '<pre>';
             // print_r($_REQUEST);
@@ -481,11 +544,14 @@ if(!class_exists('taxiClass')){
             // Add Way 
             if(isset($_REQUEST['way'])) $price = $price * $_REQUEST['way'];
 
+            // Calculate Hourly Price
+            if(isset($_REQUEST['submit_hourly'])) $price = get_field('hr_price', $postid) * $_REQUEST['hours'];
+
             // Add Vat 
             $taxi_vat = get_option('taxi_vat', 0);
             $price += $price * ($taxi_vat / 100);
             $price = number_format($price, 2);
-            return apply_filters( 'the_vichle_price', $price );
+            return apply_filters( 'the_Vehicle_price', $price );
         }
 
         protected function processSettingsPageRequest(){
@@ -496,6 +562,7 @@ if(!class_exists('taxiClass')){
                 $airport_seaport    = (isset($_REQUEST['airport_seaport']) && $_REQUEST['airport_seaport'] == 'on') ? 1:0;
                 $hourly_rent        = (isset($_REQUEST['hourly_rent']) && $_REQUEST['hourly_rent'] == 'on') ? 1:0;
                 $taxi_vat           = isset($_REQUEST['taxi_vat']) ? $_REQUEST['taxi_vat']:0;
+                $map_api            = isset($_REQUEST['map_api']) ? $_REQUEST['map_api']:'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ';
                 $quote_page         = $_REQUEST['quote_page'];
 
                 
@@ -504,6 +571,7 @@ if(!class_exists('taxiClass')){
                 update_option( 'hourly_rent', $hourly_rent );
                 update_option( 'quote_page', $quote_page);
                 update_option( 'taxi_vat', $taxi_vat);
+                update_option( 'map_api', $map_api);
                 
             }
 

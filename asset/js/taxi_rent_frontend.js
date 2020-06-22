@@ -12,8 +12,6 @@ jQuery(document).ready(function(e){
 
     }
     
-
-
     jQuery(document).on('click', 'a.online-payment', function(e){
         var rent_amount = jQuery(this).data('amount')
         e.preventDefault();
@@ -37,4 +35,28 @@ jQuery(document).ready(function(e){
       form.append(newInput);
       form.submit();
     });
+
+
+    // Switch functionality
+    jQuery(document.body).on('click', 'div#switchDirection img', function(){
+      var pickupSelect = jQuery('select#pickup_airport_select'),
+      pickupInput = jQuery('input#pickup_airport'),
+      destinationSelect = jQuery('select#destination_airport_select'),
+      destinationInput = jQuery('input#destination_airport');
+
+      if(pickupSelect.is(':disabled')){
+          pickupSelect.prop('disabled', false);
+          pickupInput.prop('disabled', true);
+          destinationSelect.prop('disabled', true);
+          destinationInput.prop('disabled', false);
+      }else{
+          pickupSelect.prop('disabled', true);
+          pickupInput.prop('disabled', false);
+          destinationSelect.prop('disabled', false);
+          destinationInput.prop('disabled', true);
+      }
+
+    })
+
+
 });
