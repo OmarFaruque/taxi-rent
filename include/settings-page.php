@@ -10,6 +10,7 @@ $hourly_rent = get_option( 'hourly_rent', 1 );
 $quote_page = get_option('quote_page');
 $taxi_vat = get_option('taxi_vat');
 $map_api = get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ');
+$tr_from_button_text = get_option( 'tr_from_button_text', __('Show price & book online', 'taxi-rent') );
 
 ?>
 <div id="taxi_wrap" class="pt-3 bg-white">

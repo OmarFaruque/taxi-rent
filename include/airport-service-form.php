@@ -62,5 +62,5 @@ $quote_url = get_the_permalink( get_option('quote_page') );
     </div>
 <br>
 <input type="hidden" id="distance" name="distance" value="">
-<input type="submit" disabled class="btn btn-primary" name="submit_for_quote" value="<?php _e('Show price & book online', 'taxi-rent'); ?>">
+<input type="submit" disabled class="btn btn-primary" name="submit_for_quote" value="<?php echo get_option( 'tr_from_button_text', __('Show price & book online', 'taxi-rent') ); ?>">
 </form>

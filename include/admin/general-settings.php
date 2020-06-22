@@ -63,6 +63,21 @@
                 </td>
             </tr>
 
+
+            <!-- Booking Form Button Text -->
+
+            <tr>
+                <td>
+                <label for="taxi_vat">
+                    <?php _e('Booking Form Button (text)', 'taxi-rent'); ?>&nbsp; </label>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" value="<?php echo $tr_from_button_text; ?>" name="tr_from_button_text" id="tr_from_button_text" class="form-control">
+                    </div>
+                </td>
+            </tr>
+
             <!-- Google Map Api -->
             <tr>
                 <td>

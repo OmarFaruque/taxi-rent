@@ -558,12 +558,13 @@ if(!class_exists('taxiClass')){
 
             
             if(isset($_REQUEST['taxi_settings_button'])){
-                $local_service      = (isset($_REQUEST['local_service']) && $_REQUEST['local_service'] == 'on') ? 1:0;
-                $airport_seaport    = (isset($_REQUEST['airport_seaport']) && $_REQUEST['airport_seaport'] == 'on') ? 1:0;
-                $hourly_rent        = (isset($_REQUEST['hourly_rent']) && $_REQUEST['hourly_rent'] == 'on') ? 1:0;
-                $taxi_vat           = isset($_REQUEST['taxi_vat']) ? $_REQUEST['taxi_vat']:0;
-                $map_api            = isset($_REQUEST['map_api']) ? $_REQUEST['map_api']:'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ';
-                $quote_page         = $_REQUEST['quote_page'];
+                $local_service          = (isset($_REQUEST['local_service']) && $_REQUEST['local_service'] == 'on') ? 1:0;
+                $airport_seaport        = (isset($_REQUEST['airport_seaport']) && $_REQUEST['airport_seaport'] == 'on') ? 1:0;
+                $hourly_rent            = (isset($_REQUEST['hourly_rent']) && $_REQUEST['hourly_rent'] == 'on') ? 1:0;
+                $taxi_vat               = isset($_REQUEST['taxi_vat']) ? $_REQUEST['taxi_vat']:0;
+                $map_api                = isset($_REQUEST['map_api']) ? $_REQUEST['map_api']:'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ';
+                $tr_from_button_text    = isset($_REQUEST['tr_from_button_text']) ? $_REQUEST['tr_from_button_text']: __('Show price & book online', 'taxi-rent');
+                $quote_page             = $_REQUEST['quote_page'];
 
                 
                 update_option( 'local_service', $local_service );
@@ -572,6 +573,7 @@ if(!class_exists('taxiClass')){
                 update_option( 'quote_page', $quote_page);
                 update_option( 'taxi_vat', $taxi_vat);
                 update_option( 'map_api', $map_api);
+                update_option( 'tr_from_button_text', $tr_from_button_text);
                 
             }
 

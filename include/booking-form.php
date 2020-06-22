@@ -7,30 +7,51 @@
 <div id="booking_form_wrap">
     <div id="tabs">
     <ul>
-        <li><a href="#local_service"><?php _e('Local Service', 'taxi-rent'); ?></a></li>
-        <li><a href="#airport-service"><?php _e('Airport & Seaport', 'taxi-rent'); ?></a></li>
+        <?php if(get_option( 'local_service', 1 )): ?>
+          <li><a href="#local_service"><?php _e('Local Service', 'taxi-rent'); ?></a></li>
+        <?php endif; ?>
+        <?php if(get_option( 'airport_seaport', 1 )): ?>
+          <li><a href="#airport-service"><?php _e('Airport & Seaport', 'taxi-rent'); ?></a></li>
+        <?php endif; ?>
+        <?php if(get_option( 'hourly_rent', 1 )): ?>
         <li><a href="#hourly"><?php _e('Hourly Rent', 'taxi-rent'); ?></a></li>
+        <?php endif; ?>
     </ul>
-    <div id="local_service">
-        <?php require_once($this->plugin_path . 'include/local-service-form.php'); ?>
-    </div>
-    <div id="airport-service">
-    <?php require_once($this->plugin_path . 'include/airport-service-form.php'); ?>
-    </div>
-    <div id="hourly">
-        <div id="hourlyForm">
-          <form method="post" action="<?php echo get_the_permalink( get_option('quote_page') ); ?>" id="hourlyF">
-          <?php wp_nonce_field( 1, 'taxi_booking_nonce' ); ?>
-              <div class="form-group">
-                  <label for="hours"><?php _e('Hours', 'taxi-rent'); ?></label>
-                  <input type="number" step="1" min="1" name="hours" id="hours" class="form-control">
-              </div>
+    <!-- End Tabls  -->
 
-              <br>
-              <input name="submit_hourly" type="submit" value="<?php _e('Show price & book online', 'taxi-rent'); ?>" class="btn btn-primary">
-          </form>
-        </div>
-    </div>
+    <?php if(get_option( 'local_service', 1 )): ?>
+      <div id="local_service">
+          <?php require_once($this->plugin_path . 'include/local-service-form.php'); ?>
+      </div>
+    <?php endif; ?>
+
+
+    <!-- Airport and Seaport Service -->
+    <?php if(get_option( 'airport_seaport', 1 )): ?>
+      <div id="airport-service">
+      <?php require_once($this->plugin_path . 'include/airport-service-form.php'); ?>
+      </div>
+    <?php endif; ?>
+
+
+    <!-- Hourly Rent Section  -->
+    <?php if(get_option( 'hourly_rent', 1 )): ?>
+      <div id="hourly">
+          <div id="hourlyForm">
+            <form method="post" action="<?php echo get_the_permalink( get_option('quote_page') ); ?>" id="hourlyF">
+            <?php wp_nonce_field( 1, 'taxi_booking_nonce' ); ?>
+                <div class="form-group">
+                    <label for="hours"><?php _e('Hours', 'taxi-rent'); ?></label>
+                    <input type="number" step="1" min="1" name="hours" id="hours" class="form-control">
+                </div>
+
+                <br>
+                <input name="submit_hourly" type="submit" value="<?php echo get_option( 'tr_from_button_text', __('Show price & book online', 'taxi-rent') ); ?>" class="btn btn-primary">
+            </form>
+          </div>
+      </div>
+    <?php endif; ?>
+    <!-- End Tab Content -->
     </div>
 </div>
 
@@ -249,4 +270,7 @@ jQuery( function() {
 });
 </script>
 
-<?php wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ&libraries=places&callback=initMap', time(), true ); ?>
+<?php 
+  wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ&libraries=places&callback=initMap', time(), true ); 
+  wp_enqueue_script( 'blockui', $this->plugin_url . 'asset/js/jquery.blockUI.js', array('jquery'), time(), true ); 
+?>
