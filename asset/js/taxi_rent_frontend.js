@@ -2,6 +2,9 @@ jQuery(document).ready(function(e){
     'use strict';
 
 
+
+
+
     if(jQuery('div#online-booking-form').length){
       var bodyheight = window.innerHeight,
       formHeight = bodyheight - 100;
@@ -29,11 +32,18 @@ jQuery(document).ready(function(e){
 
 
     // PayNow submit
-    jQuery(document.body).on('click', 'input[name="pay_now"]', function(){
+    jQuery(document.body).on('click', 'input[name="pay_now"]', function(e){
       var newInput = '<input name="submit_type" value="pay_now" type="hidden"/>',
       form = jQuery(this).closest('form');
       form.append(newInput);
       form.submit();
+    });
+
+    jQuery(document.body).on('click', 'input[name="pay_later"]', function(e){
+      e.preventDefault();
+      jQuery('div#online-booking-form').fadeOut('slow', function(){
+        jQuery('div#online-booking-form > div.form-online-inner').css('margin-left', '-100%')
+      });
     });
 
 
@@ -57,6 +67,13 @@ jQuery(document).ready(function(e){
       }
 
     })
+});
 
+
+
+/*
+* Windows load
+*/
+jQuery(window).on('load', function(){ 
 
 });

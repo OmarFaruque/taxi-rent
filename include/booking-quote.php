@@ -72,7 +72,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
                           <!-- Select Button -->
                           <div class="part-details select-button">
-                              <a href="#" data-amount="<?php echo $this->Vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php _e('Select Car', 'webinar'); ?></a>
+                              <a href="#" data-amount="<?php echo $this->Vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php echo get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') ); ?></a>
                           </div>
 
                       </div>

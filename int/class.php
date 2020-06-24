@@ -276,8 +276,11 @@ if(!class_exists('taxiClass')){
             
             wp_enqueue_style( 'jquery-ui-css', 'http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css', time(), 'all' );
             wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_frontend.css', array(), true, 'all' );
+            
+            
             wp_enqueue_script( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', array('jquery'), time(), true  );
-            wp_enqueue_script('TaxiRentJS', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery'), time(), true);
+            wp_enqueue_script( 'blockui', $this->plugin_url . 'asset/js/jquery.blockUI.js', array('jquery'), time(), true ); 
+            wp_enqueue_script('TaxiRentJS', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery', 'blockui'), time(), true);
         }
 
         /*
@@ -564,6 +567,8 @@ if(!class_exists('taxiClass')){
                 $taxi_vat               = isset($_REQUEST['taxi_vat']) ? $_REQUEST['taxi_vat']:0;
                 $map_api                = isset($_REQUEST['map_api']) ? $_REQUEST['map_api']:'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ';
                 $tr_from_button_text    = isset($_REQUEST['tr_from_button_text']) ? $_REQUEST['tr_from_button_text']: __('Show price & book online', 'taxi-rent');
+                $tr_car_select_btn      = isset($_REQUEST['tr_car_select_btn']) ? $_REQUEST['tr_car_select_btn']: __('Select Car', 'taxi-rent');
+                
                 $quote_page             = $_REQUEST['quote_page'];
 
                 
@@ -574,6 +579,7 @@ if(!class_exists('taxiClass')){
                 update_option( 'taxi_vat', $taxi_vat);
                 update_option( 'map_api', $map_api);
                 update_option( 'tr_from_button_text', $tr_from_button_text);
+                update_option( 'tr_car_select_btn', $tr_car_select_btn);
                 
             }
 

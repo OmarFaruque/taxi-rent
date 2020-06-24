@@ -78,6 +78,23 @@
                 </td>
             </tr>
 
+
+
+            <!-- Car Selection Button -->
+            
+            <tr>
+                <td>
+                <label for="tr_car_select_btn">
+                    <?php _e('Car Select Button (text)', 'taxi-rent'); ?>&nbsp; </label>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" value="<?php echo $tr_car_select_btn; ?>" name="tr_car_select_btn" id="tr_car_select_btn" class="form-control">
+                    </div>
+                </td>
+            </tr>
+
+
             <!-- Google Map Api -->
             <tr>
                 <td>

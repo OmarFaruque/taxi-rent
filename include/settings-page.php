@@ -11,6 +11,7 @@ $quote_page = get_option('quote_page');
 $taxi_vat = get_option('taxi_vat');
 $map_api = get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ');
 $tr_from_button_text = get_option( 'tr_from_button_text', __('Show price & book online', 'taxi-rent') );
+$tr_car_select_btn = get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') );
 
 ?>
 <div id="taxi_wrap" class="pt-3 bg-white">
