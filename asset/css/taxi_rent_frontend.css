@@ -81,3 +81,37 @@ div#switchDirection img {
     margin: 10px 0;
     cursor: pointer;
 }
+
+form#other_service .btn-sm:not(.toggle-off){
+    padding-top: 4px;
+    padding-left: 0;
+    padding-bottom: 0;
+}
+form#other_service .btn-sm.toggle-off{
+    padding-top: 4px;
+    padding-right: 0;
+    padding-bottom: 0px;
+}
+
+.imageDiv {
+    overflow: hidden;
+    height: 120px;
+    margin-bottom: 8px;
+    display: table;
+    position: relative;
+    max-height: 20px;
+    text-align: center;
+    justify-content: center;
+    margin: 0 auto 10px auto;
+}
+
+.imageDiv img {
+    vertical-align: middle;
+    position: relative;
+    max-width: 100%;
+    height: 80px;
+    margin: 0 auto;
+    display: table-cell;
+    overflow: hidden;
+    text-align: center;
+}

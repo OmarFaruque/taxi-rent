@@ -452,6 +452,31 @@ if(!class_exists('taxiClass')){
                             'type' => 'number',
                         ),
                         array(
+                            'key' => 'baby_set_over_5',
+                            'label' => __('Baby Set Price (Over 5 years)', 'taxi-rent'),
+                            'name' => 'baby_over_5',
+                            'type' => 'number',
+                        ),
+                        array(
+                            'key' => 'baby_set_under_5',
+                            'label' => __('Baby Set Price (Under 5 years)', 'taxi-rent'),
+                            'name' => 'baby_under_5',
+                            'type' => 'number',
+                        ),
+                        array(
+                            'key' => 'meet_n_greet',
+                            'label' => __('Meet & Greet', 'taxi-rent'),
+                            'name' => 'meet_n_greet',
+                            'type' => 'number',
+                        ),
+                        array(
+                            'key' => 'car_park',
+                            'label' => __('Car Park', 'taxi-rent'),
+                            'name' => 'car_park',
+                            'type' => 'number',
+                        ),
+
+                        array(
                             'key' => 'vehicle_details_field_5',
                             'label' => 'Hourly Price (Per Hour)',
                             'name' => 'hr_price',

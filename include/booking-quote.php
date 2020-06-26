@@ -72,7 +72,13 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
                           <!-- Select Button -->
                           <div class="part-details select-button">
-                              <a href="#" data-amount="<?php echo $this->Vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php echo get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') ); ?></a>
+                              <a href="#" 
+                                data-baby_over_5="<?php echo get_field('baby_over_5', $sv->ID) ?  get_field('baby_over_5', $sv->ID) : 0; ?>" 
+                                data-baby_under_5="<?php echo get_field('baby_under_5', $sv->ID); ?>" 
+                                data-meet_n_greet="<?php echo get_field('meet_n_greet', $sv->ID); ?>" 
+                                data-car_park="<?php echo get_field('car_park', $sv->ID); ?>" 
+                                data-amount="<?php echo $this->Vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php echo get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') ); ?>
+                              </a>
                           </div>
 
                       </div>
@@ -89,6 +95,65 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 <!-- Online Booking Form  -->
 <div id="online-booking-form" title="<?php _e('Booking Online', 'taxi-rent'); ?>">
   <div class="form-online-inner">
+
+        <div class="part-one">
+                  <h3><?php _e('Extra Options', 'taxi-rent'); ?></h3>
+                  <p>
+                    <?php _e('Add extra service with additional payment.', 'taxi-rent'); ?>
+                  </p>
+                  <form id="other_service" action="" method="post">
+                     <div class="row">
+
+                     <div class="col-sm-3 col-xs-3 col-md-3 text-center">
+                          <div class="imageDiv">
+                            <img src="<?php echo $this->plugin_url; ?>asset/img/baby-set.jpg" alt="<?php _e('Baby Seat', 'taxi-rent'); ?>">
+                          </div>
+                          <h6><?php _e('Baby Seat ( Child Over 5 Years)', 'taxi-rent'); ?>&nbsp;($<span class="baby_over_5"></span>)</h6>
+                          <input name="baby_set_over_5" id="baby_set_over_5" type="checkbox" data-toggle="toggle" data-size="sm">
+                      </div>
+                      <div class="col-sm-3 col-xs-3 col-md-3 text-center">
+                          <div class="imageDiv">    
+                            <img src="<?php echo $this->plugin_url; ?>asset/img/baby-seat.jpg" alt="<?php _e('Baby Seat Under 5 years', 'taxi-rent'); ?>">
+                          </div>
+                          <h6><?php _e('Baby Seat ( Child Under 5 Years)', 'taxi-rent'); ?>&nbsp;($<span class="baby_under_5"></span>)</h6>
+                          <input name="baby_set_under_5" id="baby_set_under_5" type="checkbox" data-toggle="toggle" data-size="sm">
+                      </div>
+                      <div class="col-sm-3 col-xs-3 col-md-3 text-center">
+                          
+                          <div class="imageDiv">
+                            <img src="<?php echo $this->plugin_url; ?>asset/img/meet-and-greet-banner01.png" alt="<?php _e('Meet & Greet', 'taxi-rent'); ?>">
+                          </div>
+                          <h6><?php _e('Meet & Greet', 'taxi-rent'); ?>&nbsp;($<span class="meet_n_greet"></span>)</h6>
+                          <input name="meet_n_greet" id="meet_n_greet" type="checkbox" data-toggle="toggle" data-size="sm">
+                      </div>
+                      <div class="col-sm-3 col-xs-3 col-md-3 text-center">
+                            <div class="imageDiv">
+                              <img src="<?php echo $this->plugin_url; ?>asset/img/car-park.png" alt="<?php _e('Car Park', 'taxi-rent'); ?>">
+                            </div>
+                          
+                            <h6><?php _e('Car Park', 'taxi-rent'); ?>&nbsp;($<span class="car_park"></span>)</h6>
+                            <input name="car_park" id="car_park" type="checkbox" data-toggle="toggle" data-size="sm">
+                      </div>
+
+                      </div>
+                      <!-- Button and Display Payment  -->
+                      <div id="displaypayment">
+                          <div class="row mt-5">
+                            <div class="col-md-6 col-xs-12 col-sm-6">
+                              <button class="btn btn-primary booking-form" type="submit"><?php _e('Next', 'taxi-rent' ) ?></button>
+                            </div>
+                            <div class="col-md-6 col-xs-12 col-sm-6 text-right">
+                                <h3>
+                                  <strong><?php _e('Price', 'taxi-rent'); ?>: </strong>
+                                  <strong class="priceAfterAddService"></strong>
+                                </h3>
+                            </div>
+                          </div>
+                      </div>
+                     
+                  </form>
+        </div>
+        <div class="part-tow d-none">
         <form action="" method="post">
               <h3><?php _e('Booking Online Single Trip', 'taxi-rent'); ?></h3>    
               <p class="details"><?php _e('Please provide us with full additional information about the passenger and the journey', 'taxi-rent'); ?></p>
@@ -227,6 +292,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
               </div>
         </form>
+        </div> <!-- End Part-Two -->
   </div>
 </div>
 
@@ -299,5 +365,11 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
 </script>
 
-<?php wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key='.get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ').'&libraries=places&callback=initMap', time(), true ); ?>
+<?php 
+
+wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key='.get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ').'&libraries=places&callback=initMap', time(), true ); 
+wp_enqueue_style( 'bootstrap-css-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css', array(), true, 'all' );
+wp_enqueue_script( 'bootstrap-js-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array(), true );
+
+?>
 <?php endif; ?>
