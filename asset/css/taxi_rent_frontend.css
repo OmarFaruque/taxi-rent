@@ -1,3 +1,21 @@
+.mt-0{margin-top: 0;}
+.mt-1{margin-top: 1rem;}
+.mt-2{margin-top: 2rem;}
+.mt-3{margin-top: 3rem;}
+.mt-4{margin-top: 4rem;}
+.mt-5{margin-top: 5rem;}
+
+.mb-0{margin-bottom: 0;}
+.mb-1{margin-bottom: 1rem;}
+.mb-2{margin-bottom: 2rem;}
+.mb-3{margin-bottom: 3rem;}
+.mb-4{margin-bottom: 4rem;}
+.mb-5{margin-bottom: 5rem;}
+
+
+
+
+
 div#way > label {
     display: inline-block;
 }
@@ -114,4 +132,12 @@ form#other_service .btn-sm.toggle-off{
     display: table-cell;
     overflow: hidden;
     text-align: center;
+}
+
+.adddropoff > span.addDropOffButton {
+    background: red;
+    color: white;
+    padding: 5px 15px;
+    margin-right: 10px;
+    cursor: pointer;
 }

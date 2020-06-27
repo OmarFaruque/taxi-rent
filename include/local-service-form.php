@@ -13,6 +13,26 @@ $quote_url = get_the_permalink( get_option('quote_page') );
         <label for="pickup"><?php _e('Pick Up', 'taxi-rent'); ?>*</label>
         <input type="text" class="w-100" name="pickup" id="pickup">
     </div>
+
+
+    <!-- Dropof -->
+
+
+    <div class="form-group" id="stop_address" style="display:none;">
+        <label for="drop_off"><?php _e('Stop Address', 'taxi-rent'); ?>*</label>
+        <input type="text" class="w-100" name="drop_off" id="drop_off">
+        <input type="hidden" name="drop_off_place_id" id="drop_off_place_id">
+    </div>
+
+    <div class="adddropoff mt-2 mb-2">
+        <span class="addDropOffButton">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+        </span>
+        <span class="text"><?php _e('Add a stop', 'taxi-rent'); ?></span>
+    </div>
+    <!-- End Dropof -->
+
+
     <div class="form-group">
         <label for="destination"><?php _e('Destination', 'taxi-rent'); ?>*</label>
         <input type="text" class="w-100" name="destination" id="destination">

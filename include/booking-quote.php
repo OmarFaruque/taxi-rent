@@ -14,9 +14,9 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
 
 
-// echo '<pre>';
-// print_r($_REQUEST);
-// echo '</pre>';
+echo '<pre>';
+print_r($_REQUEST);
+echo '</pre>';
 
 ?>
 <?php if(!isset($_REQUEST['submit_hourly'])): ?>
@@ -140,7 +140,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                       <div id="displaypayment">
                           <div class="row mt-5">
                             <div class="col-md-6 col-xs-12 col-sm-6">
-                              <button class="btn btn-primary booking-form" type="submit"><?php _e('Next', 'taxi-rent' ) ?></button>
+                              <button class="btn btn-primary booking-form next" type="submit"><?php _e('Next', 'taxi-rent' ) ?></button>
                             </div>
                             <div class="col-md-6 col-xs-12 col-sm-6 text-right">
                                 <h3>
@@ -281,8 +281,9 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 </div>
 
                 <div class="col-md-12 col-xs-12">
+                  <input name="taxi_rent_amount" type="hidden"/>
                   <div class="btn-group" role="group" aria-label="First group">
-                      <input name="taxi_rent_amount" type="hidden"/>
+                      <button class="btn btn-secondary backtochoose" type="submit"><?php _e('<< Back', 'taxi-rent'); ?></button>
                       <input type="submit" class="btn btn-secondary" name="pay_now" id="pay_now" value="<?php _e('Pay Now', 'texi-rent'); ?>">
                       <input type="submit" class="btn btn-secondary" name="pay_later" id="pay_later" value="<?php _e('Pay Later', 'texi-rent'); ?>">
                   </div>
@@ -339,18 +340,25 @@ AutocompleteDirectionsHandler.prototype.route = function() {
     return;
   }
   var me = this;
+  var waypts = [];
+  waypts.push({
+              location: "<?php echo $_REQUEST['drop_off']; ?>",
+              stopover: true
+            });
 
   this.directionsService.route({
     origin: {
       'placeId': this.originPlaceId
     },
+    waypoints: waypts,
+    optimizeWaypoints: true,
     destination: {
       'placeId': this.destinationPlaceId
     },
     travelMode: this.travelMode
   }, function(response, status) {
 
-    console.log(response.routes[0].legs[0].distance.value);
+    console.log(response);
     if (status === 'OK') {
       me.directionsDisplay.setDirections(response);
       var center = response.routes[0].overview_path[Math.floor(response.routes[0].overview_path.length / 2)];

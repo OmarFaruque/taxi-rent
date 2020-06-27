@@ -86,23 +86,40 @@ function AutocompleteDirectionsHandler(map) {
   this.travelMode = 'DRIVING';
 
 
-  var originInput = document.getElementById('pickup'),
-  destinationInput = document.getElementById('destination'),
-  pickup_airport = document.getElementById('pickup_airport'),
-  destination_airport = document.getElementById('destination_airport'),
-  modeSelector = document.getElementById('mode-selector');
-  this.directionsService = new google.maps.DirectionsService();
-  this.directionsDisplay = new google.maps.DirectionsRenderer();
+  var originInput         = document.getElementById('pickup'),
+  destinationInput        = document.getElementById('destination'),
+  pickup_airport          = document.getElementById('pickup_airport'),
+  drop_off                = document.getElementById('drop_off'),
+  destination_airport     = document.getElementById('destination_airport'),
+  modeSelector            = document.getElementById('mode-selector');
+  this.directionsService  = new google.maps.DirectionsService();
+  this.directionsDisplay  = new google.maps.DirectionsRenderer();
   this.directionsDisplay.setMap(map);
 
+
+  // Regular Form
   var originAutocomplete = new google.maps.places.Autocomplete(
     originInput, {
       fields: ['place_id', 'name', 'types']
     });
+  
+  
+  var drop_off_Autocomplete = new google.maps.places.Autocomplete(
+    drop_off, {
+      fields: ['place_id', 'name', 'types']
+  });
+
+  
   var destinationAutocomplete = new google.maps.places.Autocomplete(
     destinationInput, {
       fields: ['place_id', 'name', 'types']
   });
+
+
+
+
+
+
 
   // Airport & Seaport
   var airportPickupAutocomplete = new google.maps.places.Autocomplete(
@@ -117,6 +134,7 @@ function AutocompleteDirectionsHandler(map) {
   });
 
   this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
+  this.setupPlaceChangedListener(drop_off_Autocomplete, 'DROP');
   this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
 
 
@@ -224,7 +242,11 @@ AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(aut
     if (mode === 'ORIG') {
       me.originPlaceId = place.place_id;
       localStorage.setItem("pickup_id", place.place_id);
-    } else {
+    }
+    else if(mode == 'DROP'){
+      document.getElementById('drop_off_place_id').value = place.place_id;
+    }
+    else {
       me.destinationPlaceId = place.place_id;
       localStorage.setItem("destination_id", place.place_id);
     }
@@ -272,4 +294,5 @@ jQuery( function() {
 
 <?php 
   wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ&libraries=places&callback=initMap', time(), true ); 
+  wp_enqueue_style( 'fontAwesome', 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', array(), time(), 'all' );
 ?>

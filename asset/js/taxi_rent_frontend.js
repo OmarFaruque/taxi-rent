@@ -3,12 +3,70 @@ jQuery(document).ready(function(e){
 
 
 
+
+  /*
+    * Drop of destination
+  */
+if(jQuery('.adddropoff > span.addDropOffButton').length){
+    jQuery(document).on('click', '.adddropoff > span.addDropOffButton', function(e){
+      e.preventDefault();
+      var thisClick = jQuery(this);
+      jQuery(this).closest('div.adddropoff').prev('div#stop_address').slideToggle("slow","swing", function(){
+
+        if(thisClick.find('i.fa').hasClass('fa-plus')){
+          thisClick.find('i.fa').removeClass('fa-plus').addClass('fa-minus');
+          jQuery(this).find('input').prop('disabled', false);
+          jQuery('input#drop_off_place_id').prop('disabled', false);
+        }else{
+          thisClick.find('i.fa').removeClass('fa-minus').addClass('fa-plus');
+          jQuery(this).find('input').prop('disabled', true);
+          jQuery('input#drop_off_place_id').prop('disabled', true);
+        }
+
+      });
+
+      
+    });
+}
+
+
+
+
+  /*
+  * Back button for choose additional service
+  * Target element in booking-quote.php
+  */  
+ if(jQuery('button.backtochoose').length){
+   jQuery(document).on('click', 'button.backtochoose', function(e){
+      e.preventDefault();
+      jQuery('div#online-booking-form').find('div.part-one').removeClass('d-none');
+      jQuery('div#online-booking-form').find('div.part-tow').addClass('d-none');  
+   });
+ }
+
+
+  
+  /*
+  * Next button
+  **/
+  if(jQuery('button.booking-form.next').length){
+    jQuery(document).on('click', 'button.booking-form.next', function(e){
+      e.preventDefault();
+      jQuery('div#online-booking-form').find('div.part-one').addClass('d-none');
+      jQuery('div#online-booking-form').find('div.part-tow').slideUp('slow', function(){
+          jQuery('div#online-booking-form').find('div.part-tow').removeClass('d-none');  
+      });
+    });
+  }
+
+
+
+
     /*
     * Step 2 Add additional Service fee
     */
    if(jQuery('form#other_service').length){
-      
-      jQuery('form#other_service input').change(function(){
+    jQuery('form#other_service input').change(function(){
           var thisprice = jQuery(this).closest('div.toggle').prev('h6').find('span').text();
           var price = jQuery('strong.priceAfterAddService').text();
               
