@@ -322,8 +322,26 @@ function initMap() {
 
 function AutocompleteDirectionsHandler(map) {
   this.map = map;
-  this.originPlaceId = (localStorage.getItem('pickup_id')) ? localStorage.getItem('pickup_id') : null;
-  this.destinationPlaceId = (localStorage.getItem('destination_id')) ? localStorage.getItem('destination_id') : null;
+  this.origin = null;
+  this.destination = null;
+
+  <?php if(isset($_POST['pickup_airport'])  && $_POST['pickup_airport'] != '' ){ ?>
+    this.origin = "<?php echo $_POST['pickup_airport']; ?>";
+  <?php } ?>
+
+  <?php if(isset($_POST['pickup'])  && $_POST['pickup'] != '' ){ ?>
+    this.origin = "<?php echo $_POST['pickup']; ?>";
+  <?php } ?>
+
+  <?php if(isset($_POST['destination_airport'])  && $_POST['destination_airport'] != '' ){ ?>
+    this.destination = "<?php echo $_POST['destination_airport']; ?>";  
+  <?php } ?>
+
+  <?php if(isset($_POST['destination'])  && $_POST['destination'] != '' ){ ?>
+    this.destination = "<?php echo $_POST['destination']; ?>";  
+  <?php } ?>
+
+
   this.travelMode = 'DRIVING';
   
   this.directionsService = new google.maps.DirectionsService();
@@ -336,25 +354,26 @@ function AutocompleteDirectionsHandler(map) {
 
 
 AutocompleteDirectionsHandler.prototype.route = function() {
-  if (!this.originPlaceId || !this.destinationPlaceId) {
+  if (!this.origin || !this.destination) {
     return;
   }
+
+  console.log(this.origin);
   var me = this;
   var waypts = [];
+  
+  <?php if(isset($_REQUEST['drop_off']) && !empty($_REQUEST['drop_off'])): ?>
   waypts.push({
               location: "<?php echo $_REQUEST['drop_off']; ?>",
               stopover: true
-            });
+  });
+  <?php endif; ?>
 
   this.directionsService.route({
-    origin: {
-      'placeId': this.originPlaceId
-    },
+    origin: this.origin,
     waypoints: waypts,
     optimizeWaypoints: true,
-    destination: {
-      'placeId': this.destinationPlaceId
-    },
+    destination: this.destination,
     travelMode: this.travelMode
   }, function(response, status) {
 
@@ -363,7 +382,13 @@ AutocompleteDirectionsHandler.prototype.route = function() {
       me.directionsDisplay.setDirections(response);
       var center = response.routes[0].overview_path[Math.floor(response.routes[0].overview_path.length / 2)];
       infowindow.setPosition(center);
-      infowindow.setContent(response.routes[0].legs[0].duration.text + "<br>" + response.routes[0].legs[0].distance.text);
+
+      var content = response.routes[0].legs[0].duration.text + "<br>" + response.routes[0].legs[0].distance.text;
+      if(response.routes[0].legs[1]){
+        content += '<hr/>' + response.routes[0].legs[1].duration.text + "<br>" + response.routes[0].legs[1].distance.text;
+      }
+
+      infowindow.setContent(content);
       infowindow.open(me.map);
     } else {
       window.alert('Directions request failed due to ' + status);

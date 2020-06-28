@@ -90,6 +90,7 @@ function AutocompleteDirectionsHandler(map) {
   destinationInput        = document.getElementById('destination'),
   pickup_airport          = document.getElementById('pickup_airport'),
   drop_off                = document.getElementById('drop_off'),
+  drop_off_port           = document.getElementById('drop_off_port'),
   destination_airport     = document.getElementById('destination_airport'),
   modeSelector            = document.getElementById('mode-selector');
   this.directionsService  = new google.maps.DirectionsService();
@@ -127,6 +128,11 @@ function AutocompleteDirectionsHandler(map) {
       fields: ['place_id', 'name', 'types']
   });
 
+  var drop_off_port_Autocomplete = new google.maps.places.Autocomplete(
+    drop_off_port, {
+      fields: ['place_id', 'name', 'types']
+  });
+  
   // Airport & Seaport
   var airportDestinationAutocomplete = new google.maps.places.Autocomplete(
     destination_airport, {
@@ -139,59 +145,29 @@ function AutocompleteDirectionsHandler(map) {
 
 
   
-
   jQuery(document.body).on('change', 'select[name="destination_airport"], input[name="destination_airport"], input[name="pickup_airport"], select[name="pickup_airport"]', function(){
     // Search for Google's office in Australia.
-    setTimeout(function() {
+    var pickupSelect = jQuery('select#pickup_airport_select'),
+    execute = false;
 
-    var pickupSelect = jQuery('select#pickup_airport_select');
     if(pickupSelect.is(':disabled')){
       var pickup = jQuery('input[name="pickup_airport"]').val(),
-      port_distination = jQuery('select[name="destination_airport"]').val();
+      port_distination = jQuery('select[name="destination_airport"] option:selected').text();
+      if(jQuery('select[name="destination_airport"]').val() !='' ) execute = true;
     }else{
-      var pickup = jQuery('select[name="pickup_airport"]').val(),
+      var pickup = jQuery('select[name="pickup_airport"] option:selected').text(),
       port_distination = jQuery('input[name="destination_airport"]').val();
+      if(jQuery('select[name="pickup_airport"]').val() !='' ) execute = true;
     }
-    
-    
-    
-    var service = new google.maps.places.PlacesService(map);
-      if(pickup != '' && pickupSelect.is(':disabled')){
-        var request = {
-          location: map.getCenter(),
-          radius: '500',
-          query: pickup
-        };
-        service.textSearch(request, function(results, status){
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            me.airportPickup =  results[0].place_id;
-            localStorage.setItem("pickup_id", results[0].place_id);
-          }
-        });
-      }else{
-          me.airportPickup =  pickup;
-          localStorage.setItem("pickup_id", pickup);
-      }
-    
-      if(port_distination != '' && pickupSelect.is(':disabled')){
-        me.airportDistination =  port_distination;
-        localStorage.setItem("destination_id", port_distination);
-      }else if(port_distination != ''){
-          // Get place id via text search on google
-          var request = {
-            location: map.getCenter(),
-            radius: '500',
-            query: port_distination
-          };
-          service.textSearch(request, function(results, status){
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-              me.airportDistination =  results[0].place_id;
-              localStorage.setItem("destination_id", results[0].place_id);
-            }
-          });
-      }
+
+
+    if(execute && pickup != '' && port_distination != ''){
+      me.airportPickup = pickup;
+      me.airportDistination = port_distination;
       me.airputroute();
-  }, 4000);
+    } 
+
+  
   });
 }
 
@@ -202,19 +178,32 @@ AutocompleteDirectionsHandler.prototype.airputroute = function() {
   if (!this.airportPickup || !this.airportDistination) {
     return;
   }
-  var me = this;
+  var me = this,
+  waypts = [];
+
+  if(!document.getElementById('drop_off_port').disabled){
+    waypts.push({
+                location: document.getElementById('drop_off_port').value,
+                stopover: true
+    });
+  }
+
 
   this.directionsService.route({
-    origin: {
-      'placeId': this.airportPickup
-    },
-    destination: {
-      'placeId': this.airportDistination
-    },
-    travelMode: this.travelMode
+    origin: this.airportPickup,
+    destination: this.airportDistination,
+    travelMode: this.travelMode,
+    waypoints: waypts,
+    optimizeWaypoints: true,
   }, function(response, status) {
+    console.log(response);
     if (status === 'OK') {
-      jQuery('form#portForm').find('input[name="distance"]').val(response.routes[0].legs[0].distance.value);
+      var distance = response.routes[0].legs[0].distance.value;
+      if(response.routes[0].legs[1]){
+        distance += response.routes[0].legs[1].distance.value;
+      }
+
+      jQuery('form#portForm').find('input[name="distance"]').val(distance);
       jQuery('form#portForm').find('input[type="submit"]').prop('disabled', false);
     } else {
       window.alert('Directions request failed due to ' + status);
@@ -228,9 +217,6 @@ AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(aut
   
   var me = this;
   autocomplete.bindTo('bounds', this.map);
-
-
-
 
   autocomplete.addListener('place_changed', function() {
     var place = autocomplete.getPlace();
@@ -259,19 +245,34 @@ AutocompleteDirectionsHandler.prototype.route = function() {
     return;
   }
   var me = this;
+  var waypts = [];
+
+  if(!document.getElementById('drop_off').disabled){
+    waypts.push({
+                location: document.getElementById('drop_off').value,
+                stopover: true
+    });
+  }
 
   this.directionsService.route({
     origin: {
       'placeId': this.originPlaceId
     },
+    waypoints: waypts,
+    optimizeWaypoints: true,
     destination: {
       'placeId': this.destinationPlaceId
     },
     travelMode: this.travelMode
   }, function(response, status) {
     if (status === 'OK') {
+      var kilomiter = response.routes[0].legs[0].distance.value;
+
+      if(response.routes[0].legs[1]){
+        kilomiter += response.routes[0].legs[1].distance.value;
+      }
       
-      document.getElementById('distance').value = response.routes[0].legs[0].distance.value;
+      document.getElementById('distance').value = kilomiter;
       me.directionsDisplay.setDirections(response);
       var center = response.routes[0].overview_path[Math.floor(response.routes[0].overview_path.length / 2)];
       infowindow.setPosition(center);
