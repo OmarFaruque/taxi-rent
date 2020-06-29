@@ -139,16 +139,16 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
       destinationSelect = jQuery('select#destination_airport_select'),
       destinationInput = jQuery('input#destination_airport');
 
-      if(pickupSelect.is(':disabled')){
-          pickupSelect.prop('disabled', false);
+      if(destinationInput.is(':disabled')){
           pickupInput.prop('disabled', true);
-          destinationSelect.prop('disabled', true);
+          pickupInput.closest('div').addClass('d-none');
           destinationInput.prop('disabled', false);
+          destinationInput.closest('div').removeClass('d-none');
       }else{
-          pickupSelect.prop('disabled', true);
-          pickupInput.prop('disabled', false);
-          destinationSelect.prop('disabled', false);
-          destinationInput.prop('disabled', true);
+        pickupInput.prop('disabled', false);
+        pickupInput.closest('div').removeClass('d-none');
+        destinationInput.prop('disabled', true);
+        destinationInput.closest('div').addClass('d-none');
       }
 
     })

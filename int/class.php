@@ -482,6 +482,14 @@ if(!class_exists('taxiClass')){
                             'name' => 'hr_price',
                             'type' => 'number',
                         ),
+
+                        array(
+                            'key' => 'vehicle_details_field_6',
+                            'label' => 'Fixed Price (For Port)',
+                            'name' => 'fixed_price',
+                            'type' => 'number',
+                        ),
+
                         array (	
                             /* ... Insert generic settings here ... */
                             
@@ -550,20 +558,21 @@ if(!class_exists('taxiClass')){
             require_once( $this->plugin_path . 'include/settings-page.php' );
         }
 
-        public function Vehicle_price($postid){
+        public function vehicle_price($postid){
 
-            // echo '<pre>';
-            // print_r($_REQUEST);
-            // echo '</pre>';
+            echo '<pre>';
+            print_r($_REQUEST);
+            echo '</pre>';
 
             $distance = $_REQUEST['distance'] ? $_REQUEST['distance'] : 0;
             $firstMilePrice = 0;
             $price = 0;
+
+
             if($distance > 1000){
                 $price = get_field('first_mile_price', $postid);
                 $distance = $distance - 1000;
             }
-
             if(get_field('price', $postid)){
                 $price_per_mitr = get_field('price', $postid) / 1000;
                 $price = ($price_per_mitr * $distance) + $price;

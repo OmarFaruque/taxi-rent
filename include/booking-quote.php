@@ -65,7 +65,7 @@ echo '</pre>';
                           <!-- Price -->
                           <div class="part-details price">
                             <div class="taxi-shadow">
-                              <p class="mb-0 text-center"><span class="price">$ <?php echo $this->Vehicle_price($sv->ID); ?></span></p>
+                              <p class="mb-0 text-center"><span class="price">$ <?php echo $this->vehicle_price($sv->ID); ?></span></p>
                               <p class="text-center mb-0"><span class="vatincluded text-center">(<?php echo sprintf('including %s vat', get_option('taxi_vat', 0) . '%'); ?>)</span></p>
                             </div>
                           </div>
@@ -77,7 +77,7 @@ echo '</pre>';
                                 data-baby_under_5="<?php echo get_field('baby_under_5', $sv->ID); ?>" 
                                 data-meet_n_greet="<?php echo get_field('meet_n_greet', $sv->ID); ?>" 
                                 data-car_park="<?php echo get_field('car_park', $sv->ID); ?>" 
-                                data-amount="<?php echo $this->Vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php echo get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') ); ?>
+                                data-amount="<?php echo $this->vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php echo get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') ); ?>
                               </a>
                           </div>
 
@@ -325,19 +325,20 @@ function AutocompleteDirectionsHandler(map) {
   this.origin = null;
   this.destination = null;
 
-  <?php if(isset($_POST['pickup_airport'])  && $_POST['pickup_airport'] != '' ){ ?>
-    this.origin = "<?php echo $_POST['pickup_airport']; ?>";
-  <?php } ?>
 
-  <?php if(isset($_POST['pickup'])  && $_POST['pickup'] != '' ){ ?>
+  <?php if(isset($_POST['pickup_airport_drop'])  && $_POST['pickup_airport_drop'] != '' ){ ?>
+    this.origin = "<?php echo $_POST['pickup_airport_drop']; ?>";
+  <?php }elseif(isset($_POST['pickup_airport'])  && $_POST['pickup_airport'] != '' ){ ?>
+    this.origin = "<?php echo $_POST['pickup_airport']; ?>";
+  <?php }elseif(isset($_POST['pickup'])  && $_POST['pickup'] != '' ){ ?>
     this.origin = "<?php echo $_POST['pickup']; ?>";
   <?php } ?>
 
-  <?php if(isset($_POST['destination_airport'])  && $_POST['destination_airport'] != '' ){ ?>
+  <?php if(isset($_POST['destination_airport_drop'])  && $_POST['destination_airport_drop'] != '' ){ ?>
+    this.destination = "<?php echo $_POST['destination_airport_drop']; ?>";  
+  <?php }elseif(isset($_POST['destination_airport'])  && $_POST['destination_airport'] != '' ){ ?>
     this.destination = "<?php echo $_POST['destination_airport']; ?>";  
-  <?php } ?>
-
-  <?php if(isset($_POST['destination'])  && $_POST['destination'] != '' ){ ?>
+  <?php }elseif(isset($_POST['destination'])  && $_POST['destination'] != '' ){ ?>
     this.destination = "<?php echo $_POST['destination']; ?>";  
   <?php } ?>
 

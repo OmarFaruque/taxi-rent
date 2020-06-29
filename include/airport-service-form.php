@@ -28,7 +28,13 @@ $quote_url = get_the_permalink( get_option('quote_page') );
             
             ?>
         </select>
-        <input type="text" class="w-100 form-control" name="pickup_airport" id="pickup_airport">
+        
+        <div class="selectlocation position-relative mt-2 d-none">
+            <input type="text" disabled placeholder="<?php _e('ex. Paris Airport/City/Port/Station', 'taxi-rent'); ?>" class="w-100 form-control" name="pickup_airport_drop" id="pickup_airport">
+            <i class="fa fa-map-marker"></i>
+        </div>
+        
+
     </div>
 
 
@@ -66,8 +72,10 @@ $quote_url = get_the_permalink( get_option('quote_page') );
             
             ?>
         </select>
-
-        <input type="text" placeholder="<?php _e('ex. Paris Airport/City/Port/Station', 'taxi-rent'); ?>" name="destination_airport" id="destination_airport" class="form-control airport_distination">
+        <div class="selectlocation position-relative mt-2">
+            <input type="text" placeholder="<?php _e('ex. Paris Airport/City/Port/Station', 'taxi-rent'); ?>" name="destination_airport_drop" id="destination_airport" class="form-control airport_distination">
+            <i class="fa fa-map-marker"></i>
+        </div>
     </div>
     <div class="form-group" id="way">
         <label for="one_way">

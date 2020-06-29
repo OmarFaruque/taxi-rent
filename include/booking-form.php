@@ -145,28 +145,33 @@ function AutocompleteDirectionsHandler(map) {
 
 
   
-  jQuery(document.body).on('change', 'select[name="destination_airport"], input[name="destination_airport"], input[name="pickup_airport"], select[name="pickup_airport"]', function(){
+  jQuery(document.body).on('change', 'select[name="destination_airport"], input[name="destination_airport_drop"], input[name="pickup_airport_drop"], select[name="pickup_airport"]', function(){
     // Search for Google's office in Australia.
-    var pickupSelect = jQuery('select#pickup_airport_select'),
-    execute = false;
+    
+    setTimeout(() => {
+      
+      var distination_drop = jQuery('input#destination_airport'),
+      execute = false;
 
-    if(pickupSelect.is(':disabled')){
-      var pickup = jQuery('input[name="pickup_airport"]').val(),
-      port_distination = jQuery('select[name="destination_airport"] option:selected').text();
-      if(jQuery('select[name="destination_airport"]').val() !='' ) execute = true;
-    }else{
-      var pickup = jQuery('select[name="pickup_airport"] option:selected').text(),
-      port_distination = jQuery('input[name="destination_airport"]').val();
-      if(jQuery('select[name="pickup_airport"]').val() !='' ) execute = true;
-    }
+      if(distination_drop.is(':disabled')){
+        
+        var pickup = jQuery('select#pickup_airport_select option:selected').text();
+        var port_distination = jQuery('select#destination_airport_select option:selected').text();
+        if(jQuery('select#destination_airport_select').val() !='' && jQuery('select#pickup_airport_select').val() !='') execute = true;
+      }else{
+        var pickup = jQuery('select[name="pickup_airport"] option:selected').text(),
+        port_distination = jQuery('select[name="destination_airport"] option:selected').text();
+        var destination_airport_select = jQuery('select#destination_airport_select').val();
+        if( destination_airport_select != '' && jQuery('select#pickup_airport_select').val() !='') execute = true; 
+      }
 
+      if(execute && pickup != '' && port_distination != ''){
+        me.airportPickup = pickup;
+        me.airportDistination = port_distination;
+        me.airputroute();
+      }
 
-    if(execute && pickup != '' && port_distination != ''){
-      me.airportPickup = pickup;
-      me.airportDistination = port_distination;
-      me.airputroute();
-    } 
-
+    }, 500); 
   
   });
 }
@@ -188,6 +193,24 @@ AutocompleteDirectionsHandler.prototype.airputroute = function() {
     });
   }
 
+  // Add waypoints if destination drop-off is not empty
+  if(document.getElementById('destination_airport').value != ''){
+    waypts.push({
+                location: document.getElementById('destination_airport').value,
+                stopover: true
+    });
+  }
+
+
+  // Add waypoints if pickup drop-off is not empty
+  if(document.getElementById('pickup_airport').value != ''){
+    waypts.push({
+                location: document.getElementById('pickup_airport').value,
+                stopover: true
+    });
+  }
+
+
 
   this.directionsService.route({
     origin: this.airportPickup,
@@ -197,7 +220,28 @@ AutocompleteDirectionsHandler.prototype.airputroute = function() {
     optimizeWaypoints: true,
   }, function(response, status) {
     console.log(response);
-    if (status === 'OK') {
+    var process = true;
+    /* If distination drop-off not empty */
+    if(document.getElementById('destination_airport').value != ''){
+      var counter = (document.getElementById('drop_off_port').disabled) ? 1 : 2;
+      var dropofvalue = response.routes[0].legs[counter].distance.value;
+      if(dropofvalue > 2000){
+        process = false;
+        jQuery('form#portForm').find('input[type="submit"]').prop('disabled', true);
+      }
+    }
+
+    /* If picup dropof not empty */
+    if(document.getElementById('pickup_airport').value != ''){
+      var dropofvalue = response.routes[0].legs[0].distance.value;
+      if(dropofvalue > 2000){
+        process = false;
+        jQuery('form#portForm').find('input[type="submit"]').prop('disabled', true);
+      }
+    }
+    
+
+    if (status === 'OK' && process) {
       var distance = response.routes[0].legs[0].distance.value;
       if(response.routes[0].legs[1]){
         distance += response.routes[0].legs[1].distance.value;
