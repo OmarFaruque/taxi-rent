@@ -93,7 +93,8 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
     }
     
     jQuery(document).on('click', 'a.online-payment', function(e){
-        var rent_amount = jQuery(this).data('amount')
+        var rent_amount = jQuery(this).data('amount'),
+        vehicle_id = jQuery(this).data('post_id');
         e.preventDefault();
         var bodywidth = jQuery(document.body).width();
 
@@ -108,6 +109,8 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
           formwidth = jQuery('div#online-booking-form > div.form-online-inner').outerWidth(),
           marginLeft = (bodywidth - formwidth) / 2;
           form.find('input[name="taxi_rent_amount"]').val(rent_amount);
+          form.find('input[name="vehicle_id"]').val(vehicle_id);
+          
           jQuery('strong.priceAfterAddService').text(rent_amount);
           jQuery('div#online-booking-form > div.form-online-inner').animate({
             marginLeft: marginLeft + 'px' 

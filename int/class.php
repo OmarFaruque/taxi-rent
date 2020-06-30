@@ -47,8 +47,50 @@ if(!class_exists('taxiClass')){
             // Delete Airport List bya Ajax 
             add_action( 'wp_ajax_deleteAirportListItemByAjax', array($this, 'deleteAirportListItemByAjax') );
 
+            add_action( 'woocommerce_add_order_item_meta', array($this, 'add_order_item_meta') , 10, 3 );
+
+            // add_action('wp_head', array($this, 'testFunction'));
+
         }
 
+
+        /*
+        * Test function 
+        */
+        public function testFunction(){
+            global $woocommerce;
+            $items = $woocommerce->cart->get_cart();
+
+            echo '<pre>';
+            print_r($items);
+            echo '</pre>';
+            
+        }
+
+
+        /*
+        * Add Order Mta
+        */
+        public function add_order_item_meta($item_id, $cart_item, $cart_item_key){
+            if(isset( $cart_item['taxi-meta'])){
+                $vehicle_id = $cart_item['taxi-meta']['vehicle_id'];
+                
+                // wc_add_order_item_meta( $item_id, 'cover_image_id', $cart_item['cover_id'] ); 
+               foreach($cart_item['taxi-meta'] as $k=> $single_value){
+                
+                switch($k){
+                    case 'vehicle_id':
+                        $k = __('Vehicle', 'taxi-rent');
+                        $single_value = sprintf('<a target="_blank" href="%s">%s</a>', get_edit_post_link($single_value), get_the_title( $single_value ) );
+                    break;
+                    default:
+                        $k = str_replace('_', ' ', $k);
+                        $k = ucwords($k);
+                }
+                wc_add_order_item_meta( $item_id, $k, $single_value );
+               }
+            }
+        }
 
 
         /*
@@ -159,12 +201,28 @@ if(!class_exists('taxiClass')){
         * Woocommerce payment process
         */
         protected function woocommercer_payment_process(){
+
+            // echo '<pre>';
+            // print_r($_POST);
+            // echo '</pre>';
+
             $product = get_taxi_product();
             if ($product) {
                 add_filter('woocommerce_add_cart_item_data', array($this, 'add_taxi_product_price_to_cart_item_data'), 10, 2);
                 wc()->cart->empty_cart();
+                $metas = array();
+                $posts = $_POST;
                 
-                wc()->cart->add_to_cart($product->get_id());
+                unset($posts['woocommerce-edit-address-nonce']);
+                unset($posts['save-account-details-nonce']);
+                unset($posts['woocommerce-reset-password-nonce']);
+                unset($posts['_wpnonce']);
+                unset($posts['woocommerce-login-nonce']);
+                unset($posts['submit_type']);
+                unset($posts['taxi_rent_amount']);
+                $metas['taxi-meta'] = $posts;
+                
+                wc()->cart->add_to_cart($product->get_id(), 1, '0', array(), $metas);
                 $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
                 wp_safe_redirect($redirect_url);
                 exit();
@@ -560,9 +618,9 @@ if(!class_exists('taxiClass')){
 
         public function vehicle_price($postid){
 
-            echo '<pre>';
-            print_r($_REQUEST);
-            echo '</pre>';
+            // echo '<pre>';
+            // print_r($_REQUEST);
+            // echo '</pre>';
 
             $distance = $_REQUEST['distance'] ? $_REQUEST['distance'] : 0;
             $firstMilePrice = 0;
@@ -583,6 +641,9 @@ if(!class_exists('taxiClass')){
 
             // Calculate Hourly Price
             if(isset($_REQUEST['submit_hourly'])) $price = get_field('hr_price', $postid) * $_REQUEST['hours'];
+
+            // fixed Price Calculate for port
+            if(isset($_POST['destination_airport']) && !empty($_POST['destination_airport'])) $price = get_field('fixed_price', $postid) * $_REQUEST['way'];
 
             // Add Vat 
             $taxi_vat = get_option('taxi_vat', 0);

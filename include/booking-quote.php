@@ -73,6 +73,7 @@ echo '</pre>';
                           <!-- Select Button -->
                           <div class="part-details select-button">
                               <a href="#" 
+                                data-post_id = "<?php echo $sv->ID; ?>" 
                                 data-baby_over_5="<?php echo get_field('baby_over_5', $sv->ID) ?  get_field('baby_over_5', $sv->ID) : 0; ?>" 
                                 data-baby_under_5="<?php echo get_field('baby_under_5', $sv->ID); ?>" 
                                 data-meet_n_greet="<?php echo get_field('meet_n_greet', $sv->ID); ?>" 
@@ -282,6 +283,7 @@ echo '</pre>';
 
                 <div class="col-md-12 col-xs-12">
                   <input name="taxi_rent_amount" type="hidden"/>
+                  <input name="vehicle_id" type="hidden"/>
                   <div class="btn-group" role="group" aria-label="First group">
                       <button class="btn btn-secondary backtochoose" type="submit"><?php _e('<< Back', 'taxi-rent'); ?></button>
                       <input type="submit" class="btn btn-secondary" name="pay_now" id="pay_now" value="<?php _e('Pay Now', 'texi-rent'); ?>">
