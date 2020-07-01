@@ -338,7 +338,8 @@ if(!class_exists('taxiClass')){
             
             wp_enqueue_script( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', array('jquery'), time(), true  );
             wp_enqueue_script( 'blockui', $this->plugin_url . 'asset/js/jquery.blockUI.js', array('jquery'), time(), true ); 
-            wp_enqueue_script('TaxiRentJS', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery', 'blockui'), time(), true);
+            
+            wp_enqueue_script('TaxiRentJSs', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery', 'blockui', 'jquery-form-validate'), time(), true);
         }
 
         /*

@@ -2,7 +2,19 @@ jQuery(document).ready(function(e){
     'use strict';
 
 
+  /*
+  * Date picker
+  */
+  if(jQuery('input#travel_date_time').length){
+    jQuery('input#travel_date_time').datepicker();
+  }
 
+  /*
+  * Form Validattion 
+  */
+ if(jQuery("#comfirmByPayment").length) { 
+    jQuery("#comfirmByPayment").validate();
+ }
 
   /*
     * Drop of destination
@@ -120,34 +132,37 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
 
 
     // PayNow submit
-    jQuery(document.body).on('click', 'input[name="pay_now"]', function(e){
+    jQuery(document.body).on('click', 'input[name="pay_now"], input[name="pay_later"]', function(e){
       var newInput = '<input name="submit_type" value="pay_now" type="hidden"/>',
       form = jQuery(this).closest('form');
       form.append(newInput);
       form.submit();
     });
 
-    jQuery(document.body).on('click', 'input[name="pay_later"]', function(e){
-      e.preventDefault();
-      jQuery('div#online-booking-form').fadeOut('slow', function(){
-        jQuery('div#online-booking-form > div.form-online-inner').css('margin-left', '-100%')
-      });
-    });
+    // jQuery(document.body).on('click', 'input[name="pay_later"]', function(e){
+    //   e.preventDefault();
+    //   jQuery('div#online-booking-form').fadeOut('slow', function(){
+    //     jQuery('div#online-booking-form > div.form-online-inner').css('margin-left', '-100%')
+    //   });
+    // });
 
 
     // Switch functionality
-    jQuery(document.body).on('click', 'div#switchDirection img', function(){
+    jQuery(document.body).on('click', 'div#switchDirection', function(){
+      console.log('sss');
       var pickupSelect = jQuery('select#pickup_airport_select'),
       pickupInput = jQuery('input#pickup_airport'),
       destinationSelect = jQuery('select#destination_airport_select'),
       destinationInput = jQuery('input#destination_airport');
-
+      
       if(destinationInput.is(':disabled')){
+        console.log('iomar');
           pickupInput.prop('disabled', true);
           pickupInput.closest('div').addClass('d-none');
           destinationInput.prop('disabled', false);
           destinationInput.closest('div').removeClass('d-none');
       }else{
+        console.log('Test');
         pickupInput.prop('disabled', false);
         pickupInput.closest('div').removeClass('d-none');
         destinationInput.prop('disabled', true);

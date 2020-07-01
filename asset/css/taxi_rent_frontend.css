@@ -99,6 +99,9 @@ div#switchDirection img {
     margin: 10px 0;
     cursor: pointer;
 }
+div#switchDirection{
+    cursor: pointer;
+}
 
 form#other_service .btn-sm:not(.toggle-off){
     padding-top: 4px;
@@ -149,4 +152,11 @@ form#other_service .btn-sm.toggle-off{
     right: 7px;
     bottom: 7px;
     font-size: 22px;
+}
+form#comfirmByPayment label.error {
+    color: red;
+    font-size: 14px;
+}
+form#comfirmByPayment input.error{
+    border-color: red;
 }

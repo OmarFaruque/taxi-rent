@@ -10,6 +10,7 @@ $quote_url = get_the_permalink( get_option('quote_page') );
 <form id="portForm" action="<?php echo $quote_url; ?>" method="post">
 
     <div id="switchDirection" class="switcher mb-2">
+        <span><?php _e('Click to swap Pickup', 'taxi-rent'); ?>:</span>
         <img src="<?php echo $this->plugin_url; ?>asset/img/noun_swap_373742.png" alt="Switcher">
     </div>
 

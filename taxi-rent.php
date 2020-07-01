@@ -23,6 +23,15 @@ define( 'MY_ACF_PATH', taxiDIR . 'int/advanced-custom-fields-pro/' );
 define( 'MY_ACF_URL', taxiDIR . 'int/advanced-custom-fields-pro/' );
 
 
+    /*
+    * Show notice if woocommerce aren't installed
+    */
+    function taxi_admin_notice(){
+            echo sprintf('<div class="notice notice-warning is-dismissible">
+                <p>%s</p>
+            </div>', __('WooCommerce are required for "Taxi-Rent" Plugin.', 'taxi-rent'));
+    }
+
 
     $activeAcf = false;
     if ( is_plugin_active( 'advanced-custom-fields-pro/acf.php' ) ) {
@@ -38,11 +47,11 @@ define( 'MY_ACF_URL', taxiDIR . 'int/advanced-custom-fields-pro/' );
     }
 
 
+    if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {        
+        require_once(taxiDIR . 'int/unility/functions.php');
+        require_once(taxiDIR . 'int/class.php');
 
-
-
-
-require_once(taxiDIR . 'int/unility/functions.php');
-require_once(taxiDIR . 'int/class.php');
-
-new taxiClass;
+        new taxiClass;
+    }else{
+        add_action('admin_notices', 'taxi_admin_notice');
+    }

@@ -14,9 +14,20 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
 
 
-// echo '<pre>';
-// print_r($_REQUEST);
-// echo '</pre>';
+echo '<pre>';
+print_r($_REQUEST);
+echo '</pre>';
+
+$collectionAddress = '';
+$distinationAddress = '';
+if(isset($_POST['pickup']))                     $collectionAddress = $_POST['pickup'];
+if(isset($_POST['pickup_airport']))             $collectionAddress = $_POST['pickup_airport'];
+if(isset($_POST['pickup_airport_drop']))        $collectionAddress = $_POST['pickup_airport_drop'];
+
+// Distination
+if(isset($_POST['destination']))               $distinationAddress = $_POST['destination'];
+if(isset($_POST['destination_airport']))       $distinationAddress = $_POST['destination_airport'];
+if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['destination_airport_drop'];
 
 ?>
 <?php if(!isset($_REQUEST['submit_hourly'])): ?>
@@ -155,15 +166,15 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                   </form>
         </div>
         <div class="part-tow d-none">
-        <form action="" method="post">
+        <form id="comfirmByPayment" action="" method="post">
               <h3><?php _e('Booking Online Single Trip', 'taxi-rent'); ?></h3>    
               <p class="details"><?php _e('Please provide us with full additional information about the passenger and the journey', 'taxi-rent'); ?></p>
 
               <div class="row">
                   <div class="col-md-12 col-xs-12">
                     <div class="form-group">
-                      <label for="booking_person"><?php _e('Person making the reservation', 'taxi_rent'); ?></label>
-                      <input type="text" name="booking_person" id="booking_person" class="form-control">
+                      <label for="booking_person"><?php _e('Person making the reservation', 'taxi_rent'); ?>*</label>
+                      <input type="text" required name="booking_person" id="booking_person" class="form-control">
                     </div>
                   </div>
               </div>
@@ -178,15 +189,15 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
                   <div class="col-md-6 col-xs-12">
                     <div class="form-group">
-                      <label for="contact_number"><?php _e('Contact Number', 'taxi_rent'); ?></label>
-                      <input type="tel" name="contact_number" id="contact_number" class="form-control">
+                      <label for="contact_number"><?php _e('Contact Number', 'taxi_rent'); ?>*</label>
+                      <input required type="tel" name="contact_number" id="contact_number" class="form-control">
                     </div>
                   </div>
 
                   <div class="col-md-6 col-xs-12">
                     <div class="form-group">
-                      <label for="contact_email"><?php _e('Your E-mail Address', 'taxi_rent'); ?></label>
-                      <input type="mail" name="contact_email" id="contact_email" class="form-control">
+                      <label for="contact_email"><?php _e('Your E-mail Address', 'taxi_rent'); ?>*</label>
+                      <input required type="mail" name="contact_email" id="contact_email" class="form-control">
                     </div>
                   </div>
               </div>
@@ -199,7 +210,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 <div class="col-md-6 col-xs-12">
                     <div class="form-group">
                       <label for="passenger_name"><?php _e('Lead passenger*', 'taxi_rent'); ?></label>
-                      <input type="text" name="passenger_name" id="passenger_name" class="form-control">
+                      <input required type="text" name="passenger_name" id="passenger_name" class="form-control">
                     </div>
                 </div>
 
@@ -207,7 +218,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 <div class="col-md-6 col-xs-12">
                     <div class="form-group">
                       <label for="passenger_contact_no"><?php _e('Passenger Contact No*', 'taxi_rent'); ?></label>
-                      <input type="tel" name="passenger_contact_no" id="passenger_contact_no" class="form-control">
+                      <input required type="tel" name="passenger_contact_no" id="passenger_contact_no" class="form-control">
                     </div>
                 </div>
 
@@ -215,7 +226,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 <div class="col-md-6 col-xs-12">
                     <div class="form-group">
                       <label for="number_of_passenger"><?php _e('Number of Passenger*', 'taxi_rent'); ?></label>
-                      <input type="number" name="number_of_passenger" id="number_of_passenger" class="form-control">
+                      <input required type="number" name="number_of_passenger" id="number_of_passenger" class="form-control">
                     </div>
                 </div>
 
@@ -223,7 +234,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 <div class="col-md-6 col-xs-12">
                     <div class="form-group">
                       <label for="number_of_luggage"><?php _e('Number of Luggage*', 'taxi_rent'); ?></label>
-                      <input type="number" name="number_of_luggage" id="number_of_luggage" class="form-control">
+                      <input required type="number" name="number_of_luggage" id="number_of_luggage" class="form-control">
                     </div>
                 </div>
               </div>
@@ -236,7 +247,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 <div class="col-md-12 col-xs-12">
                     <div class="form-group">
                       <label for="travel_date_time"><?php _e('Travel Date*', 'taxi_rent'); ?></label>
-                      <input type="text" name="travel_date_time" id="travel_date_time" class="form-control">
+                      <input type="text" autocomplete="off" name="travel_date_time" id="travel_date_time" class="form-control">
                     </div>
                 </div>
 
@@ -244,7 +255,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 <div class="col-md-12 col-xs-12">
                     <div class="form-group">
                       <label for="collection_address"><?php _e('Collection Address', 'taxi_rent'); ?></label>
-                      <textarea name="collection_address" id="collection_address" class="form-control" cols="30" rows="2"></textarea>
+                      <textarea readonly name="collection_address" id="collection_address" class="form-control" cols="30" rows="2"><?php echo $collectionAddress; ?></textarea>
                     </div>
                 </div>
 
@@ -252,7 +263,7 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
                 <div class="col-md-12 col-xs-12">
                     <div class="form-group">
                       <label for="destination_address"><?php _e('Destination Address', 'taxi_rent'); ?></label>
-                      <textarea name="destination_address" id="destination_address" class="form-control" cols="30" rows="2"></textarea>
+                      <textarea readonly name="destination_address" id="destination_address" class="form-control" cols="30" rows="2"><?php echo $distinationAddress; ?></textarea>
                     </div>
                 </div>
 
@@ -380,15 +391,18 @@ AutocompleteDirectionsHandler.prototype.route = function() {
     travelMode: this.travelMode
   }, function(response, status) {
 
-    console.log(response);
+    // console.log(response);
     if (status === 'OK') {
       me.directionsDisplay.setDirections(response);
       var center = response.routes[0].overview_path[Math.floor(response.routes[0].overview_path.length / 2)];
       infowindow.setPosition(center);
 
-      var content = response.routes[0].legs[0].duration.text + "<br>" + response.routes[0].legs[0].distance.text;
+      var distance1 = response.routes[0].legs[0].distance.value / 1609.34;
+
+      var content = response.routes[0].legs[0].duration.text + "<br>" + distance1.toFixed(2) + ' Miles';
       if(response.routes[0].legs[1]){
-        content += '<hr/>' + response.routes[0].legs[1].duration.text + "<br>" + response.routes[0].legs[1].distance.text;
+        var distance2 = response.routes[0].legs[1].distance.value / 1609.34;
+        content += '<hr/>' + response.routes[0].legs[1].duration.text + "<br>" + distance2.toFixed(2) + ' Miles';
       }
 
       infowindow.setContent(content);
@@ -406,6 +420,6 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key='.get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ').'&libraries=places&callback=initMap', time(), true ); 
 wp_enqueue_style( 'bootstrap-css-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css', array(), true, 'all' );
 wp_enqueue_script( 'bootstrap-js-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array(), true );
-
+wp_enqueue_script( 'jquery-form-validate', 'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js', array('jquery'), time(), true ); 
 ?>
 <?php endif; ?>
