@@ -119,8 +119,6 @@
             </tr>
 
         </table>
-
-        
         
         <br>
         <input type="submit" name="taxi_settings_button" class="btn btn-primary" value="<?php _e('Submit', 'taxi-rent'); ?>">
