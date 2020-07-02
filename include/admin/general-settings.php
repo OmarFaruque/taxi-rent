@@ -108,6 +108,16 @@
                 </td>
             </tr>
 
+            <!-- Shortcode -->
+            <tr>
+                <td>
+                    <?php _e('Shortcode', 'taxi-rent'); ?>
+                </td>
+                <td>
+                    <span>['taxi-booking']</span>
+                </td>
+            </tr>
+
         </table>
 
         
