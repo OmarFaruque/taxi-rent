@@ -215,3 +215,23 @@ form#comfirmByPayment input.error{
     padding-right: 15px;
     padding-left: 15px;
 }
+.d-none{
+    display: none;
+}
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+.toggle.btn-sm {
+    min-width: 3.125rem;
+    min-height: 1.938rem;
+}
+.toggle {
+    position: relative;
+    overflow: hidden;
+}
+.btn-sm {
+    padding: 0.5rem 1.25rem;
+}
+.btn-primary, input[type="button"], input[type="reset"], input[type="submit"], .btn-outline-primary, .button.add_to_cart_button, .wc-proceed-to-checkout .checkout-button.button, .price_slider_amount button[type="submit"] {
+    border-color: #002e5b;
+}
