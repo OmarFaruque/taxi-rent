@@ -114,7 +114,7 @@
                     <?php _e('Shortcode', 'taxi-rent'); ?>
                 </td>
                 <td>
-                    <span>['taxi-booking']</span>
+                    <span>[taxi-booking]</span>
                 </td>
             </tr>
 

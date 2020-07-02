@@ -14,9 +14,9 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
 
 
-echo '<pre>';
-print_r($_REQUEST);
-echo '</pre>';
+// echo '<pre>';
+// print_r($_REQUEST);
+// echo '</pre>';
 
 $collectionAddress = '';
 $distinationAddress = '';
