@@ -58,12 +58,15 @@ if(!class_exists('taxiClass')){
         * Test function 
         */
         public function testFunction(){
-            global $woocommerce;
-            $items = $woocommerce->cart->get_cart();
+            $airportList = get_option( 'portlists');
+            $airportList = $airportList ? json_decode($airportList) : array();
 
+            $lastkey = end(array_keys($airportList));
+            echo 'last key: ' . $lastKey . '<br/>';
             echo '<pre>';
-            print_r($items);
+            print_r(key($airportList));
             echo '</pre>';
+            // echo 'array last key: ' . array_key_last($airportList) . '<br/>';
             
         }
 
@@ -103,13 +106,14 @@ if(!class_exists('taxiClass')){
             $airportList = (array)$airportList;
 
             $success = false;
-            if(array_key_exists($_POST['place_id'], $airportList)){
+            
                 
-                unset($airportList[$_POST['place_id']]);
-                $airportList = json_encode( $airportList );
-                update_option( 'portlists', $airportList );
-                $success = true;
-            }
+            unset($airportList[$_POST['place_id']]);
+            $airportList = array_values( $airportList );
+            $airportList = json_encode( $airportList );
+            update_option( 'portlists', $airportList );
+            $success = true;
+            
 
             $msg = $success ? 'success' : 'fail';
             wp_send_json( array(
@@ -124,24 +128,30 @@ if(!class_exists('taxiClass')){
         * Ajax Action for add airport list
         */
         public function addNewAirportListByAjax(){
+            // delete_option( 'portlists' );
             $airportList = get_option( 'portlists');
             $airportList = $airportList ? json_decode($airportList) : array();
             $airportList = (array)$airportList;
-            $place_id = $_POST['place_id'];
             
-            $success = false;
-            if(!array_key_exists($place_id, $airportList)){
-                $airportList[$place_id] = $_POST['address'];
-                $success = true;
-            }
+            
+            $success = true;
+            
+            $newItem = array(
+                    'port_a' => $_POST['port_a'],
+                    'port_b' => $_POST['port_b'],
+                    'price' => $_POST['price']
+            );
+            array_push($airportList, $newItem);
+
+            $airportList = array_values( $airportList );
+               
+            
             $airportList = json_encode($airportList);
             update_option('portlists', $airportList);
             
             $msg = $success ? 'success' : 'fail';
             wp_send_json( array(
-                'msg' => $msg,
-                'posts' => $_POST,
-                'lists' => $airportList
+                'msg' => $msg
             ) );
             wp_die();
         }
@@ -336,10 +346,10 @@ if(!class_exists('taxiClass')){
             wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_frontend.css', array(), true, 'all' );
             
             
-            wp_enqueue_script( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', array('jquery'), time(), true  );
+            wp_enqueue_script( 'jquery-ui-cdn', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', array('jquery'), time(), true  );
             wp_enqueue_script( 'blockui', $this->plugin_url . 'asset/js/jquery.blockUI.js', array('jquery'), time(), true ); 
             
-            wp_enqueue_script('TaxiRentJSs', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery', 'blockui', 'jquery-form-validate'), time(), true);
+            wp_enqueue_script('TaxiRentJSs', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery'), time(), true);
         }
 
         /*
@@ -541,14 +551,6 @@ if(!class_exists('taxiClass')){
                             'name' => 'hr_price',
                             'type' => 'number',
                         ),
-
-                        array(
-                            'key' => 'vehicle_details_field_6',
-                            'label' => 'Fixed Price (For Port)',
-                            'name' => 'fixed_price',
-                            'type' => 'number',
-                        ),
-
                         array (	
                             /* ... Insert generic settings here ... */
                             
@@ -623,6 +625,8 @@ if(!class_exists('taxiClass')){
             // print_r($_REQUEST);
             // echo '</pre>';
 
+
+
             $distance = $_REQUEST['distance'] ? $_REQUEST['distance'] : 0;
             $firstMilePrice = 0;
             $price = 0;
@@ -644,7 +648,18 @@ if(!class_exists('taxiClass')){
             if(isset($_REQUEST['submit_hourly'])) $price = get_field('hr_price', $postid) * $_REQUEST['hours'];
 
             // fixed Price Calculate for port
-            if(isset($_POST['destination_airport']) && !empty($_POST['destination_airport'])) $price = get_field('fixed_price', $postid) * $_REQUEST['way'];
+            if(isset($_POST['destination_airport']) && !empty($_POST['destination_airport'])){
+    
+                if(get_option('portlists')):
+                    $portlists = json_decode(get_option('portlists'));
+                    foreach($portlists as $s){
+                        if($s->port_a == $_POST['pickup_airport'] && $s->port_b == $_POST['destination_airport']){
+                            $price = $s->price;
+                        }
+                    }
+                endif;
+                $price = (int)$price * $_REQUEST['way'];
+            } 
 
             // Add Vat 
             $taxi_vat = get_option('taxi_vat', 0);

@@ -2,41 +2,83 @@
 <div id="airportList">
     <div id="innerList">
         <div class="list-inner background-white">
-        <ul id="ul_inner_list">
+        <table class="table table-striped" id="ul_inner_list">
+            <thead class="thead-dark">
+                <tr>
+                    <th><?php _e('Port A', 'taxi-rent'); ?></th>
+                    <th><?php _e('Port B', 'taxi-rent'); ?></th>
+                    <th><?php _e('Price', 'taxi-rent'); ?></th>
+                    <th><?php _e('Action', 'taxi-rent'); ?></th>
+                </tr>
+            </thead>
         <?php if($portLists = get_option('portlists')): 
                 $portLists = json_decode($portLists);
                 $portLists = (array)$portLists;
 
-                foreach($portLists as $k => $singlePort){
-                    echo '<li data-place_id="'.$k.'"><span class="address">'.$singlePort.'</span><span class="delete_from_list"><span class="dashicons dashicons-dismiss"></span></span></li>';
-                }
+                // echo 'Omar<pre>';
+                // print_r($portLists);
+                // echo '</pre>';
+
+                foreach($portLists as $k => $singlePort){ ?>
+                    <tr data-place_id="<?php echo $k; ?>">
+                        <td><?php echo $singlePort->port_a;  ?></td>
+                        <td><?php echo $singlePort->port_b;  ?></td>
+                        <td><?php echo $singlePort->price;  ?></td>
+                        <td>
+                            <a href="#" data-id="<?php echo $k; ?>" class="delete_port"><?php _e('Delete', 'taxi-rent'); ?></a>
+                        </td>
+                    </tr>
+                <?php }
         ?>
         <?php endif; ?>
-        </ul>
+        </table>
         </div>    
     </div>
 
-    <div class="addFormlist">
-        <div class="form-group">
-            <label for="add_address"><?php _e('Add Address to list', 'taxt-rent'); ?></label>
-            <div class="input-group mb-3">
-                <input id="add_address" class="form-control" type="text" name="add_address">
-                <input type="hidden" name="place_id" id="place_id">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" onClick="addtoList()" id="addAddressButton" type="button"><span class="pt-4-px dashicons dashicons-plus"></span></button>
-                </div>
-            </div>
+    <div class="addFormlist mt-5">
+        <div class="row">
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            
+                        
+                            <form id="addPortList" action="" method="post">
+                                <label for="port_a"><?php _e('Add Port List', 'taxt-rent'); ?></label>
+                                <div class="input-group mb-3">
+                                    <input required id="port_a" class="form-control" placeholder="<?php _e('Port A', 'taxi-rent'); ?>" type="text" name="port_a">
+                                    <input required id="port_b" class="form-control" placeholder="<?php _e('Port B', 'taxi-rent'); ?>" type="text" name="port_b">
+                                    <input required id="price" class="form-control" type="number" placeholder="<?php _e('Price', 'taxi-rent'); ?>" name="port_price">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-outline-secondary" id="addAddressButton" type="button"><span class="pt-4-px dashicons dashicons-plus"></span></button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+
+                    
+
         </div>
     </div>
+
+
 </div>    
 
 
 
 <script>
 function initMap() {
-    var add_address = document.getElementById('add_address');
+    var add_address = document.getElementById('port_a'),
+    port_b = document.getElementById('port_b');
+    
     var place = new google.maps.places.Autocomplete(
     add_address, {
+      fields: ['place_id', 'name', 'types']
+    });
+
+    var place_b = new google.maps.places.Autocomplete(
+    port_b, {
       fields: ['place_id', 'name', 'types']
     });
     

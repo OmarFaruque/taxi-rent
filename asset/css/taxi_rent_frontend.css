@@ -101,6 +101,10 @@ div#switchDirection img {
 }
 div#switchDirection{
     cursor: pointer;
+    display: table;
+}
+div#switchDirection span{
+    display: table-cell;
 }
 
 form#other_service .btn-sm:not(.toggle-off){

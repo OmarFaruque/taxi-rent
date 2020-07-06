@@ -16,14 +16,17 @@ $quote_url = get_the_permalink( get_option('quote_page') );
 
     <?php wp_nonce_field( 1, 'taxi_booking_nonce' ); ?>
     <div class="form-group">
-        <label for="pickup_airport"><?php _e('Pick Up', 'taxi-rent'); ?>*</label>
         <select name="pickup_airport" class="form-control" id="pickup_airport_select">
             <option value=""><?php _e('Please Select Airport', 'taxi-rent'); ?></option>
             <?php 
             if(get_option('portlists')):
                 $portlists = json_decode(get_option('portlists'));
+
+                // echo 'omar array <br/><pre>';
+                // print_r($portlists);
+                // echo '</pre>';
                 foreach($portlists as $k => $sport){
-                    echo '<option value="'.$sport.'">'.$sport.'</option>';
+                    echo '<option value="'.$sport->port_a.'">'.$sport->port_a.'</option>';
                 }    
             endif; 
             
@@ -51,7 +54,7 @@ $quote_url = get_the_permalink( get_option('quote_page') );
         <span class="addDropOffButton">
             <i class="fa fa-plus" aria-hidden="true"></i>
         </span>
-        <span class="text"><?php _e('Add a stop', 'taxi-rent'); ?></span>
+        <span class="text"><?php _e('VIA', 'taxi-rent'); ?></span>
     </div>
     <!-- End Dropof -->
 
@@ -59,7 +62,6 @@ $quote_url = get_the_permalink( get_option('quote_page') );
 
 
     <div class="form-group">
-        <label for="destination"><?php _e('Destination', 'taxi-rent'); ?>*</label>
         <!-- <input type="text" class="w-100" name="destination_airport" id="destination_airport"> -->
         <select name="destination_airport" class="form-control" id="destination_airport_select">
             <option value=""><?php _e('Please Select Airport', 'taxi-rent'); ?></option>
@@ -67,7 +69,7 @@ $quote_url = get_the_permalink( get_option('quote_page') );
             if(get_option('portlists')):
                 $portlists = json_decode(get_option('portlists'));
                 foreach($portlists as $k => $sport){
-                    echo '<option value="'.$sport.'">'.$sport.'</option>';
+                    echo '<option value="'.$sport->port_b.'">'.$sport->port_b.'</option>';
                 }    
             endif; 
             

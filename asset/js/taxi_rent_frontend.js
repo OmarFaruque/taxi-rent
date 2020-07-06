@@ -149,7 +149,7 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
 
     // Switch functionality
     jQuery(document.body).on('click', 'div#switchDirection', function(){
-      console.log('sss');
+      // console.log('sss');
       var pickupSelect = jQuery('select#pickup_airport_select'),
       pickupInput = jQuery('input#pickup_airport'),
       destinationSelect = jQuery('select#destination_airport_select'),
