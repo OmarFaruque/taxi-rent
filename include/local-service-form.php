@@ -19,13 +19,11 @@ $quote_url = get_the_permalink( get_option('quote_page') );
 
 
     <div class="form-group" id="stop_address" style="display:none;">
-        <label for="drop_off"><?php _e('Stop Address', 'taxi-rent'); ?>*</label>
-        <input type="text" class="w-100" disabled name="drop_off" id="drop_off">
-        <input type="hidden" name="drop_off_place_id" id="drop_off_place_id">
+            
     </div>
 
     <div class="adddropoff mt-2 mb-2">
-        <span class="addDropOffButton">
+        <span class="addDropOffButton local">
             <i class="fa fa-plus" aria-hidden="true"></i>
         </span>
         <span class="text"><?php _e('Add a stop', 'taxi-rent'); ?></span>

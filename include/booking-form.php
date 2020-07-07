@@ -90,7 +90,7 @@ function AutocompleteDirectionsHandler(map) {
   destinationInput        = document.getElementById('destination'),
   pickup_airport          = document.getElementById('pickup_airport'),
   drop_off                = document.getElementById('drop_off'),
-  drop_off_port           = document.getElementById('drop_off_port'),
+  
   destination_airport     = document.getElementById('destination_airport'),
   modeSelector            = document.getElementById('mode-selector');
   this.directionsService  = new google.maps.DirectionsService();
@@ -128,11 +128,8 @@ function AutocompleteDirectionsHandler(map) {
       fields: ['place_id', 'name', 'types']
   });
 
-  var drop_off_port_Autocomplete = new google.maps.places.Autocomplete(
-    drop_off_port, {
-      fields: ['place_id', 'name', 'types']
-  });
-  
+
+ 
   // Airport & Seaport
   var airportDestinationAutocomplete = new google.maps.places.Autocomplete(
     destination_airport, {
@@ -145,24 +142,26 @@ function AutocompleteDirectionsHandler(map) {
 
 
   
-  jQuery(document.body).on('change', 'select[name="destination_airport"], input[name="destination_airport_drop"], input[name="pickup_airport_drop"], select[name="pickup_airport"]', function(){
+  jQuery(document.body).on('change', 'input.drop_off_port, select[name="destination_airport"], input[name="destination_airport_drop"], input[name="pickup_airport_drop"], select[name="pickup_airport"]', function(){
     // Search for Google's office in Australia.
     
-    setTimeout(() => {
-      
-      var distination_drop = jQuery('input#destination_airport'),
+    setTimeout(() => {      
       execute = false;
 
-      if(distination_drop.is(':disabled')){
-        
+      // console.log('status: ' + jQuery('input[name="swap"]').val());
+      if(jQuery('input[name="swap"]').val() == 'town_to_port'){
         var pickup = jQuery('select#pickup_airport_select option:selected').text();
+        if(jQuery('input[name="pickup_airport_drop"]').val() != '') pickup = jQuery('input[name="pickup_airport_drop"]').val();
+
         var port_distination = jQuery('select#destination_airport_select option:selected').text();
         if(jQuery('select#destination_airport_select').val() !='' && jQuery('select#pickup_airport_select').val() !='') execute = true;
       }else{
-        var pickup = jQuery('select[name="pickup_airport"] option:selected').text(),
-        port_distination = jQuery('select[name="destination_airport"] option:selected').text();
-        var destination_airport_select = jQuery('select#destination_airport_select').val();
-        if( destination_airport_select != '' && jQuery('select#pickup_airport_select').val() !='') execute = true; 
+        var pickup = jQuery('select[name="destination_airport"] option:selected').text();
+        
+        var port_distination = jQuery('select[name="pickup_airport"] option:selected').text();
+        if(jQuery('input[name="pickup_airport_drop"]').val() != '') port_distination = jQuery('input[name="pickup_airport_drop"]').val();
+
+        if( jQuery('select[name="pickup_airport"]').val() != '' && pickup !='') execute = true; 
       }
 
       if(execute && pickup != '' && port_distination != ''){
@@ -185,30 +184,36 @@ AutocompleteDirectionsHandler.prototype.airputroute = function() {
   }
   var me = this,
   waypts = [];
-
-  if(!document.getElementById('drop_off_port').disabled){
-    waypts.push({
-                location: document.getElementById('drop_off_port').value,
-                stopover: true
-    });
-  }
-
-  // Add waypoints if destination drop-off is not empty
-  if(document.getElementById('destination_airport').value != ''){
-    waypts.push({
-                location: document.getElementById('destination_airport').value,
-                stopover: true
-    });
+  var dropLength = document.getElementsByClassName('drop_off_port');
+  
+  if(dropLength.length > 0){
+    for(var i=0; i < dropLength.length; i++ ){
+      waypts.push({
+                  location: dropLength[i].value,
+                  stopover: true
+      });
+    }
   }
 
 
   // Add waypoints if pickup drop-off is not empty
+  
+  var process = true;
   if(document.getElementById('pickup_airport').value != ''){
-    waypts.push({
-                location: document.getElementById('pickup_airport').value,
-                stopover: true
-    });
+      this.directionsService.route({
+      origin: document.getElementById('pickup_airport_select').value,
+      destination: document.getElementById('pickup_airport').value,
+      travelMode: this.travelMode,
+      optimizeWaypoints: true,
+    }, function(response, status){
+        var dropofvalue = response.routes[0].legs[0].distance.value;
+        if(dropofvalue > 2000){
+          process = false;
+          jQuery('form#portForm').find('input[type="submit"]').prop('disabled', true);
+        }
+    });    
   }
+
 
 
 
@@ -219,32 +224,17 @@ AutocompleteDirectionsHandler.prototype.airputroute = function() {
     waypoints: waypts,
     optimizeWaypoints: true,
   }, function(response, status) {
-    console.log(response);
-    var process = true;
-    /* If distination drop-off not empty */
-    if(document.getElementById('destination_airport').value != ''){
-      var counter = (document.getElementById('drop_off_port').disabled) ? 1 : 2;
-      var dropofvalue = response.routes[0].legs[counter].distance.value;
-      if(dropofvalue > 2000){
-        process = false;
-        jQuery('form#portForm').find('input[type="submit"]').prop('disabled', true);
-      }
-    }
-
-    /* If picup dropof not empty */
-    if(document.getElementById('pickup_airport').value != ''){
-      var dropofvalue = response.routes[0].legs[0].distance.value;
-      if(dropofvalue > 2000){
-        process = false;
-        jQuery('form#portForm').find('input[type="submit"]').prop('disabled', true);
-      }
-    }
-    
 
     if (status === 'OK' && process) {
       var distance = response.routes[0].legs[0].distance.value;
       if(response.routes[0].legs[1]){
         distance += response.routes[0].legs[1].distance.value;
+      }
+      if(response.routes[0].legs[2]){
+        distance += response.routes[0].legs[2].distance.value;
+      }
+      if(response.routes[0].legs[3]){
+        distance += response.routes[0].legs[3].distance.value;
       }
 
       jQuery('form#portForm').find('input[name="distance"]').val(distance);
@@ -291,12 +281,17 @@ AutocompleteDirectionsHandler.prototype.route = function() {
   var me = this;
   var waypts = [];
 
-  if(!document.getElementById('drop_off').disabled){
-    waypts.push({
-                location: document.getElementById('drop_off').value,
-                stopover: true
-    });
+ 
+  var dropLength = document.getElementsByClassName('drop_off'); 
+  if(dropLength.length > 0){
+    for(var i=0; i < dropLength.length; i++ ){
+      waypts.push({
+                  location: dropLength[i].value,
+                  stopover: true
+      });
+    }
   }
+
 
   this.directionsService.route({
     origin: {
@@ -310,18 +305,37 @@ AutocompleteDirectionsHandler.prototype.route = function() {
     travelMode: this.travelMode
   }, function(response, status) {
     if (status === 'OK') {
-      // console.log(response);
+      
       var kilomiter = response.routes[0].legs[0].distance.value;
 
       if(response.routes[0].legs[1]){
         kilomiter += response.routes[0].legs[1].distance.value;
+      }
+      if(response.routes[0].legs[2]){
+        kilomiter += response.routes[0].legs[2].distance.value;
+      }
+      if(response.routes[0].legs[3]){
+        kilomiter += response.routes[0].legs[3].distance.value;
       }
       
       document.getElementById('distance').value = kilomiter;
       me.directionsDisplay.setDirections(response);
       var center = response.routes[0].overview_path[Math.floor(response.routes[0].overview_path.length / 2)];
       infowindow.setPosition(center);
-      infowindow.setContent(response.routes[0].legs[0].duration.text + "<br>" + response.routes[0].legs[0].distance.text);
+      var content = response.routes[0].legs[0].duration.text + "<br>" + response.routes[0].legs[0].distance.text;
+      
+      if(response.routes[0].legs[1]){
+        content += '<hr/>' + response.routes[0].legs[1].duration.text + "<br>" + response.routes[0].legs[1].distance.text;
+      }
+      if(response.routes[0].legs[2]){
+        content += '<hr/>' + response.routes[0].legs[2].duration.text + "<br>" + response.routes[0].legs[2].distance.text;
+      }
+      if(response.routes[0].legs[3]){
+        content += '<hr/>' + response.routes[0].legs[3].duration.text + "<br>" + response.routes[0].legs[3].distance.text;
+      }
+
+      infowindow.setContent(content);
+
       infowindow.open(me.map);
     } else {
       window.alert('Directions request failed due to ' + status);

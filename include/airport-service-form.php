@@ -10,14 +10,15 @@ $quote_url = get_the_permalink( get_option('quote_page') );
 <form id="portForm" action="<?php echo $quote_url; ?>" method="post">
 
     <div id="switchDirection" class="switcher mb-2">
+        <input type="hidden" name="swap" value="town_to_port">
         <span><?php _e('Click to swap Pickup', 'taxi-rent'); ?>:</span>
         <img src="<?php echo $this->plugin_url; ?>asset/img/noun_swap_373742.png" alt="Switcher">
     </div>
 
     <?php wp_nonce_field( 1, 'taxi_booking_nonce' ); ?>
-    <div class="form-group">
+    <div id="townSelection" class="form-group">
         <select name="pickup_airport" class="form-control" id="pickup_airport_select">
-            <option value=""><?php _e('Please Select Airport', 'taxi-rent'); ?></option>
+            <option value=""><?php _e('Please Select Your Town', 'taxi-rent'); ?></option>
             <?php 
             if(get_option('portlists')):
                 $portlists = json_decode(get_option('portlists'));
@@ -32,39 +33,37 @@ $quote_url = get_the_permalink( get_option('quote_page') );
             
             ?>
         </select>
-        
-        <div class="selectlocation position-relative mt-2 d-none">
-            <input type="text" disabled placeholder="<?php _e('ex. Paris Airport/City/Port/Station', 'taxi-rent'); ?>" class="w-100 form-control" name="pickup_airport_drop" id="pickup_airport">
+        <div class="selectlocation position-relative mt-2">
+            <input type="text" placeholder="<?php _e('Please Enter your Address', 'taxi-rent'); ?>" class="w-100 form-control" name="pickup_airport_drop" id="pickup_airport">
             <i class="fa fa-map-marker"></i>
         </div>
-        
-
     </div>
 
 
 
 
-    <!-- Dropof -->
-    <div class="form-group" id="stop_address" style="display:none;">
-        <label for="drop_off_port"><?php _e('Stop Address', 'taxi-rent'); ?>*</label>
-        <input type="text" class="w-100" disabled name="drop_off" id="drop_off_port">
-    </div>
+   <div id="dropAreea">
+        <!-- Dropof -->
+        <div class="form-group" id="stop_address" style="display:none;">
+            
+        </div>
 
-    <div class="adddropoff mt-2 mb-2">
-        <span class="addDropOffButton">
-            <i class="fa fa-plus" aria-hidden="true"></i>
-        </span>
-        <span class="text"><?php _e('VIA', 'taxi-rent'); ?></span>
-    </div>
-    <!-- End Dropof -->
+        <div class="adddropoff mt-2 mb-2">
+            <span class="addDropOffButton">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            </span>
+            <span class="text"><?php _e('VIA', 'taxi-rent'); ?></span>
+        </div>
+        <!-- End Dropof -->
+   </div>
 
 
 
 
-    <div class="form-group">
+    <div id="portListsArea" class="form-group">
         <!-- <input type="text" class="w-100" name="destination_airport" id="destination_airport"> -->
         <select name="destination_airport" class="form-control" id="destination_airport_select">
-            <option value=""><?php _e('Please Select Airport', 'taxi-rent'); ?></option>
+            <option value=""><?php _e('Please Select Airport or Seaport', 'taxi-rent'); ?></option>
             <?php 
             if(get_option('portlists')):
                 $portlists = json_decode(get_option('portlists'));
@@ -75,10 +74,6 @@ $quote_url = get_the_permalink( get_option('quote_page') );
             
             ?>
         </select>
-        <div class="selectlocation position-relative mt-2">
-            <input type="text" placeholder="<?php _e('ex. Paris Airport/City/Port/Station', 'taxi-rent'); ?>" name="destination_airport_drop" id="destination_airport" class="form-control airport_distination">
-            <i class="fa fa-map-marker"></i>
-        </div>
     </div>
     <div class="form-group" id="way">
         <label for="one_way">

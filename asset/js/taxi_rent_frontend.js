@@ -22,22 +22,29 @@ jQuery(document).ready(function(e){
 if(jQuery('.adddropoff > span.addDropOffButton').length){
     jQuery(document).on('click', '.adddropoff > span.addDropOffButton', function(e){
       e.preventDefault();
-      var thisClick = jQuery(this);
-      jQuery(this).closest('div.adddropoff').prev('div#stop_address').slideToggle("slow","swing", function(){
-
-        if(thisClick.find('i.fa').hasClass('fa-plus')){
-          thisClick.find('i.fa').removeClass('fa-plus').addClass('fa-minus');
-          jQuery(this).find('input').prop('disabled', false);
-          jQuery('input#drop_off_place_id').prop('disabled', false);
-        }else{
-          thisClick.find('i.fa').removeClass('fa-minus').addClass('fa-plus');
-          jQuery(this).find('input').prop('disabled', true);
-          jQuery('input#drop_off_place_id').prop('disabled', true);
-        }
-
-      });
-
+      var length = jQuery(this).closest('div.adddropoff').prev('div#stop_address').find('.single-via').length;
       
+      if(length < 3){
+        var className = (jQuery(this).hasClass('local')) ? 'drop_off' : 'drop_off_port';
+        var html = '<div class="single-via mb-3">'
+        +'<input type="text" class="w-100 '+className+'" placeholder="Stop Address" name="drop_off[]">'
+        +'<span class="delete_via"> <i class="fa fa-minus-circle" aria-hidden="true"></i> </span>'
+        +'</div>';
+        var thisClick = jQuery(this);
+        jQuery(this).closest('div.adddropoff').prev('div#stop_address').show();
+        jQuery(this).closest('div.adddropoff').prev('div#stop_address').append(html);
+      }
+
+       // AirportDorp field 
+      
+      var drop_off_port           = (!jQuery(this).hasClass('local')) ? document.getElementsByClassName('drop_off_port') : document.getElementsByClassName('drop_off');
+      for(var i=0; i < drop_off_port.length; i++ ){
+        var drop_off_port_Autocomplete = new google.maps.places.Autocomplete(
+          drop_off_port[i], {
+            fields: ['place_id', 'name', 'types']
+        });
+      }
+
     });
 }
 
@@ -150,24 +157,18 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
     // Switch functionality
     jQuery(document.body).on('click', 'div#switchDirection', function(){
       // console.log('sss');
-      var pickupSelect = jQuery('select#pickup_airport_select'),
-      pickupInput = jQuery('input#pickup_airport'),
-      destinationSelect = jQuery('select#destination_airport_select'),
-      destinationInput = jQuery('input#destination_airport');
-      
-      if(destinationInput.is(':disabled')){
-        console.log('iomar');
-          pickupInput.prop('disabled', true);
-          pickupInput.closest('div').addClass('d-none');
-          destinationInput.prop('disabled', false);
-          destinationInput.closest('div').removeClass('d-none');
+      var swap = jQuery('input[name="swap"]');
+      if(swap.val() == 'town_to_port'){
+        swap.val('port_to_town');
+        jQuery('#townSelection').insertAfter('div#dropAreea');
+        jQuery('#portListsArea').insertBefore('div#dropAreea');
       }else{
-        console.log('Test');
-        pickupInput.prop('disabled', false);
-        pickupInput.closest('div').removeClass('d-none');
-        destinationInput.prop('disabled', true);
-        destinationInput.closest('div').addClass('d-none');
+        swap.val('town_to_port');
+        jQuery('#townSelection').insertBefore('div#dropAreea');
+        jQuery('#portListsArea').insertAfter('div#dropAreea');
       }
+      
+      
 
     })
 });

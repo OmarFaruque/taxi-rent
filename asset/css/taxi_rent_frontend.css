@@ -145,8 +145,13 @@ form#other_service .btn-sm.toggle-off{
     background: red;
     color: white;
     padding: 5px 15px;
-    margin-right: 10px;
+    margin-right: 11px;
     cursor: pointer;
+    vertical-align: middle;
+    line-height: 0;
+    text-align: center;
+    display: inline-block;
+    float: none;
 }
 .position-relative{
     position: relative;
@@ -238,4 +243,22 @@ form#comfirmByPayment input.error{
 }
 .btn-primary, input[type="button"], input[type="reset"], input[type="submit"], .btn-outline-primary, .button.add_to_cart_button, .wc-proceed-to-checkout .checkout-button.button, .price_slider_amount button[type="submit"] {
     border-color: #002e5b;
+}
+.single-via {
+    position: relative;
+}
+span.delete_via {
+    position: absolute;
+    top: -5px;
+    right: 0;
+    color: red;
+    display: none;
+    cursor: pointer;
+}
+
+.single-via:hover span.delete_via{
+    display: block;
+}
+form#other_service h6 {
+    height: 45px;
 }

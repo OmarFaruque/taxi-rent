@@ -120,14 +120,14 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                           <div class="imageDiv">
                             <img src="<?php echo $this->plugin_url; ?>asset/img/baby-set.jpg" alt="<?php _e('Baby Seat', 'taxi-rent'); ?>">
                           </div>
-                          <h6><?php _e('Baby Seat ( Child Over 5 Years)', 'taxi-rent'); ?>&nbsp;($<span class="baby_over_5"></span>)</h6>
+                          <h6><?php _e('Baby Seat ( Child Over 5 Years)', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="baby_over_5"></span>)</h6>
                           <input name="baby_set_over_5" id="baby_set_over_5" type="checkbox" data-toggle="toggle" data-size="sm">
                       </div>
                       <div class="col-sm-3 col-xs-3 col-md-3 text-center">
                           <div class="imageDiv">    
                             <img src="<?php echo $this->plugin_url; ?>asset/img/baby-seat.jpg" alt="<?php _e('Baby Seat Under 5 years', 'taxi-rent'); ?>">
                           </div>
-                          <h6><?php _e('Baby Seat ( Child Under 5 Years)', 'taxi-rent'); ?>&nbsp;($<span class="baby_under_5"></span>)</h6>
+                          <h6><?php _e('Baby Seat ( Child Under 5 Years)', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="baby_under_5"></span>)</h6>
                           <input name="baby_set_under_5" id="baby_set_under_5" type="checkbox" data-toggle="toggle" data-size="sm">
                       </div>
                       <div class="col-sm-3 col-xs-3 col-md-3 text-center">
@@ -135,7 +135,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                           <div class="imageDiv">
                             <img src="<?php echo $this->plugin_url; ?>asset/img/meet-and-greet-banner01.png" alt="<?php _e('Meet & Greet', 'taxi-rent'); ?>">
                           </div>
-                          <h6><?php _e('Meet & Greet', 'taxi-rent'); ?>&nbsp;($<span class="meet_n_greet"></span>)</h6>
+                          <h6><?php _e('Meet & Greet', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="meet_n_greet"></span>)</h6>
                           <input name="meet_n_greet" id="meet_n_greet" type="checkbox" data-toggle="toggle" data-size="sm">
                       </div>
                       <div class="col-sm-3 col-xs-3 col-md-3 text-center">
@@ -143,7 +143,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                               <img src="<?php echo $this->plugin_url; ?>asset/img/car-park.png" alt="<?php _e('Car Park', 'taxi-rent'); ?>">
                             </div>
                           
-                            <h6><?php _e('Car Park', 'taxi-rent'); ?>&nbsp;($<span class="car_park"></span>)</h6>
+                            <h6><?php _e('Car Park', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="car_park"></span>)</h6>
                             <input name="car_park" id="car_park" type="checkbox" data-toggle="toggle" data-size="sm">
                       </div>
 
@@ -156,7 +156,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                             </div>
                             <div class="col-md-6 col-xs-12 col-sm-6 text-right">
                                 <h3>
-                                  <strong><?php _e('Price', 'taxi-rent'); ?>: </strong>
+                                  <strong><?php _e('Price', 'taxi-rent'); ?>: <?php echo get_woocommerce_currency_symbol(); ?></strong>
                                   <strong class="priceAfterAddService"></strong>
                                 </h3>
                             </div>
@@ -339,21 +339,25 @@ function AutocompleteDirectionsHandler(map) {
   this.destination = null;
 
 
-  <?php if(isset($_POST['pickup_airport_drop'])  && $_POST['pickup_airport_drop'] != '' ){ ?>
-    this.origin = "<?php echo $_POST['pickup_airport_drop']; ?>";
-  <?php }elseif(isset($_POST['pickup_airport'])  && $_POST['pickup_airport'] != '' ){ ?>
-    this.origin = "<?php echo $_POST['pickup_airport']; ?>";
-  <?php }elseif(isset($_POST['pickup'])  && $_POST['pickup'] != '' ){ ?>
-    this.origin = "<?php echo $_POST['pickup']; ?>";
-  <?php } ?>
+  <?php if(isset($_POST['swap'])): ?>
+      <?php if(isset($_POST['pickup_airport_drop'])  && $_POST['pickup_airport_drop'] != '' ){ ?>
+        this.origin = "<?php echo $_POST['pickup_airport_drop']; ?>";
+      <?php }elseif(isset($_POST['pickup_airport'])  && $_POST['pickup_airport'] != '' ){ ?>
+        this.origin = "<?php echo $_POST['pickup_airport']; ?>";
+      <?php } ?>
 
-  <?php if(isset($_POST['destination_airport_drop'])  && $_POST['destination_airport_drop'] != '' ){ ?>
-    this.destination = "<?php echo $_POST['destination_airport_drop']; ?>";  
-  <?php }elseif(isset($_POST['destination_airport'])  && $_POST['destination_airport'] != '' ){ ?>
-    this.destination = "<?php echo $_POST['destination_airport']; ?>";  
-  <?php }elseif(isset($_POST['destination'])  && $_POST['destination'] != '' ){ ?>
-    this.destination = "<?php echo $_POST['destination']; ?>";  
-  <?php } ?>
+
+      <?php if($_POST['swap'] == 'port_to_town'): ?>
+        this.origin = "<?php echo $_POST['destination_airport']; ?>";
+        this.destination = "<?php echo ($_POST['pickup_airport_drop'] != '') ? $_POST['pickup_airport_drop'] : $_POST['pickup_airport']; ?>";
+      <?php else: ?>
+        this.origin = "<?php echo ($_POST['pickup_airport_drop'] != '') ? $_POST['pickup_airport_drop'] : $_POST['pickup_airport']; ?>";
+        this.destination = "<?php echo $_POST['destination_airport']; ?>";
+      <?php endif; ?>
+  <?php else: ?>
+      this.origin = "<?php echo $_POST['pickup']; ?>";
+      this.destination = "<?php echo $_POST['destination']; ?>";
+  <?php endif; ?>
 
 
   this.travelMode = 'DRIVING';
@@ -372,16 +376,17 @@ AutocompleteDirectionsHandler.prototype.route = function() {
     return;
   }
 
-  console.log(this.origin);
+  
   var me = this;
   var waypts = [];
   
-  <?php if(isset($_REQUEST['drop_off']) && !empty($_REQUEST['drop_off'])): ?>
-  waypts.push({
-              location: "<?php echo $_REQUEST['drop_off']; ?>",
-              stopover: true
-  });
-  <?php endif; ?>
+  <?php if(isset($_REQUEST['drop_off']) && !empty($_REQUEST['drop_off'])): 
+  foreach($_REQUEST['drop_off'] as $sDrop): ?>
+    waypts.push({
+                location: "<?php echo $sDrop; ?>",
+                stopover: true
+    });
+  <?php endforeach; endif; ?>
 
   this.directionsService.route({
     origin: this.origin,
@@ -403,6 +408,14 @@ AutocompleteDirectionsHandler.prototype.route = function() {
       if(response.routes[0].legs[1]){
         var distance2 = response.routes[0].legs[1].distance.value / 1609.34;
         content += '<hr/>' + response.routes[0].legs[1].duration.text + "<br>" + distance2.toFixed(2) + ' Miles';
+      }
+      if(response.routes[0].legs[2]){
+        var distance3 = response.routes[0].legs[2].distance.value / 1609.34;
+        content += '<hr/>' + response.routes[0].legs[2].duration.text + "<br>" + distance3.toFixed(2) + ' Miles';
+      }
+      if(response.routes[0].legs[3]){
+        var distance4 = response.routes[0].legs[3].distance.value / 1609.34;
+        content += '<hr/>' + response.routes[0].legs[2].duration.text + "<br>" + distance4.toFixed(2) + ' Miles';
       }
 
       infowindow.setContent(content);
