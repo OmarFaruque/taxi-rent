@@ -2,6 +2,16 @@ jQuery(document).ready(function(e){
     'use strict';
 
 
+
+  /*
+  * Hide Payment Form
+  */
+ jQuery(document.body).on('click', 'div#removeContinue', function(e){
+    jQuery('div#online-booking-form').fadeOut('slow', function(){
+    });
+ });
+
+
   /*
   * Date picker
   */
@@ -116,7 +126,7 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
         vehicle_id = jQuery(this).data('post_id');
         e.preventDefault();
         var bodywidth = jQuery(document.body).width();
-
+        console.log('bodywidth: ' + bodywidth);
         jQuery('form#other_service span.baby_over_5').text( jQuery(this).data('baby_over_5'));
         jQuery('form#other_service span.baby_under_5').text( jQuery(this).data('baby_under_5'));
         jQuery('form#other_service span.meet_n_greet').text( jQuery(this).data('meet_n_greet'));
@@ -126,7 +136,7 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
         jQuery('div#online-booking-form').fadeIn('slow', function(){
           var form = jQuery('div#online-booking-form > div.form-online-inner form'),
           formwidth = jQuery('div#online-booking-form > div.form-online-inner').outerWidth(),
-          marginLeft = (bodywidth - formwidth) / 2;
+          marginLeft = (bodywidth > 768) ? (bodywidth - formwidth) / 2 : 0;
           form.find('input[name="taxi_rent_amount"]').val(rent_amount);
           form.find('input[name="vehicle_id"]').val(vehicle_id);
           

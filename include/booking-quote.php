@@ -29,6 +29,9 @@ if(isset($_POST['destination']))               $distinationAddress = $_POST['des
 if(isset($_POST['destination_airport']))       $distinationAddress = $_POST['destination_airport'];
 if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['destination_airport_drop'];
 
+
+
+
 ?>
 <?php if(!isset($_REQUEST['submit_hourly'])): ?>
   <div id="map" style="width:100%; height:500px;"></div>
@@ -36,7 +39,12 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
 <br>
 <div id="vaclelist">
   <div class="inner-bacle-list">
-      <?php foreach($allvicles as $sv): ?>
+      <?php foreach($allvicles as $sv): 
+        // Extra Service item images
+        
+
+        
+        ?>
           <div class="single-vicle">
               <!-- Image -->
               <div class="image-vicle">
@@ -107,7 +115,9 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
 <!-- Online Booking Form  -->
 <div id="online-booking-form" title="<?php _e('Booking Online', 'taxi-rent'); ?>">
   <div class="form-online-inner">
-
+        <div id="removeContinue">
+              <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
         <div class="part-one">
                   <h3><?php _e('Extra Options', 'taxi-rent'); ?></h3>
                   <p>

@@ -49,7 +49,7 @@ if(!class_exists('taxiClass')){
 
             add_action( 'woocommerce_add_order_item_meta', array($this, 'add_order_item_meta') , 10, 3 );
 
-            // add_action('wp_head', array($this, 'testFunction'));
+            add_action('wp_head', array($this, 'addAdditionalMetaTags'));
 
         }
 
@@ -57,16 +57,8 @@ if(!class_exists('taxiClass')){
         /*
         * Test function 
         */
-        public function testFunction(){
-            $airportList = get_option( 'portlists');
-            $airportList = $airportList ? json_decode($airportList) : array();
-
-            $lastkey = end(array_keys($airportList));
-            echo 'last key: ' . $lastKey . '<br/>';
-            echo '<pre>';
-            print_r(key($airportList));
-            echo '</pre>';
-            // echo 'array last key: ' . array_key_last($airportList) . '<br/>';
+        public function addAdditionalMetaTags(){
+            echo '<meta content="width=device-width, initial-scale=1" name="viewport" />';
             
         }
 
@@ -516,35 +508,10 @@ if(!class_exists('taxiClass')){
                         ),
                         array(
                             'key' => 'vehicle_details_field_4',
-                            'label' => 'Price (Per KM)',
+                            'label' => 'Price (Per Mile)',
                             'name' => 'price',
                             'type' => 'number',
                         ),
-                        array(
-                            'key' => 'baby_set_over_5',
-                            'label' => __('Baby Set Price (Over 5 years)', 'taxi-rent'),
-                            'name' => 'baby_over_5',
-                            'type' => 'number',
-                        ),
-                        array(
-                            'key' => 'baby_set_under_5',
-                            'label' => __('Baby Set Price (Under 5 years)', 'taxi-rent'),
-                            'name' => 'baby_under_5',
-                            'type' => 'number',
-                        ),
-                        array(
-                            'key' => 'meet_n_greet',
-                            'label' => __('Meet & Greet', 'taxi-rent'),
-                            'name' => 'meet_n_greet',
-                            'type' => 'number',
-                        ),
-                        array(
-                            'key' => 'car_park',
-                            'label' => __('Car Park', 'taxi-rent'),
-                            'name' => 'car_park',
-                            'type' => 'number',
-                        ),
-
                         array(
                             'key' => 'vehicle_details_field_5',
                             'label' => 'Hourly Price (Per Hour)',
@@ -607,6 +574,87 @@ if(!class_exists('taxiClass')){
                     'instruction_placement' => 'label',
                     'hide_on_screen' => '',
                 ));
+
+
+
+
+                acf_add_local_field_group(array (
+                    'key' => 'vehicle_details_extra',
+                    'title' => 'Extra Service',
+                    'fields' => array (
+                        array(
+                            'key' => 'baby_set_over_5',
+                            'label' => __('Baby Set Price (Over 5 years)', 'taxi-rent'),
+                            'name' => 'baby_over_5',
+                            'type' => 'number',
+                        ),
+                        array(
+                            'key' => 'baby_set_over_5_img',
+                            'label' => __('Baby Set Image (Over 5 years)', 'taxi-rent'),
+                            'name' => 'baby_over_5_img',
+                            'type' => 'image',
+                        ),
+                        
+                        array(
+                            'key' => 'baby_set_under_5',
+                            'label' => __('Baby Set Price (Under 5 years)', 'taxi-rent'),
+                            'name' => 'baby_under_5',
+                            'type' => 'number',
+                        ),
+
+                        array(
+                            'key' => 'baby_set_under_5_img',
+                            'label' => __('Baby Set Image (Under 5 years)', 'taxi-rent'),
+                            'name' => 'baby_under_5_img',
+                            'type' => 'image',
+                        ),
+
+                        array(
+                            'key' => 'meet_n_greet',
+                            'label' => __('Meet & Greet', 'taxi-rent'),
+                            'name' => 'meet_n_greet',
+                            'type' => 'number',
+                        ),
+
+                        array(
+                            'key' => 'meet_n_greet_img',
+                            'label' => __('Meet & Greet Image', 'taxi-rent'),
+                            'name' => 'meet_n_greet_img',
+                            'type' => 'image',
+                        ),
+
+
+                        array(
+                            'key' => 'car_park',
+                            'label' => __('Car Park', 'taxi-rent'),
+                            'name' => 'car_park',
+                            'type' => 'number',
+                        ),
+
+                        array(
+                            'key' => 'car_park_img',
+                            'label' => __('Car Park Image', 'taxi-rent'),
+                            'name' => 'car_park_img',
+                            'type' => 'image',
+                        ),
+                    ),
+                    'location' => array (
+                        array (
+                            array (
+                                'param' => 'post_type',
+                                'operator' => '==',
+                                'value' => 'vehicle',
+                            ),
+                        ),
+                    ),
+                    'menu_order' => 1,
+                    'position' => 'normal',
+                    'style' => 'default',
+                    'label_placement' => 'top',
+                    'instruction_placement' => 'label',
+                    'hide_on_screen' => '',
+                ));
+
                 
                 endif;
         }

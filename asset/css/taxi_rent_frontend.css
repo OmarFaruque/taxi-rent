@@ -30,10 +30,6 @@ div#way > label {
 .single-vicle > div{
     display: inline-block;
 }
-div#vaclelist div.description-desc {
-    width: calc(100% - 250px);
-    float: right;
-}
 
 div#vaclelist div.description-desc div.vacle-details > div {
     width: 190px;
@@ -88,6 +84,7 @@ div#online-booking-form {
     border-radius: 5px;
     margin-left: -100%;
     overflow: auto;
+    position: relative;
 }
 form#portForm select:disabled,
 form#portForm input[type="text"]:disabled{
@@ -261,4 +258,34 @@ span.delete_via {
 }
 form#other_service h6 {
     height: 45px;
+}
+div#removeContinue {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+div#removeContinue i {
+    width: 25px;
+    height: 25px;
+    background-color: red;
+    color: white;
+    border-radius: 69px;
+    text-align: center;
+    line-height: 3px;
+    padding: 12px 0;
+    font-size: 14px;
+}
+
+@media screen and (max-width:768px){
+    form#other_service > div > div {
+        margin-bottom: 30px;
+    }
+}
+
+@media screen and (min-width: 411px){
+    div#vaclelist div.description-desc {
+        width: calc(100% - 250px);
+        float: right;
+    }    
 }
