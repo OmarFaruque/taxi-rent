@@ -32,7 +32,7 @@ div#way > label {
 }
 
 div#vaclelist div.description-desc div.vacle-details > div {
-    width: 190px;
+    width: 33.33%;
     float: left;
     max-width: 50%;
 }
@@ -48,6 +48,8 @@ div.select-button a.btn-taxi-rent {
     width: 100%;
     border-radius: 5px;
     margin: 0 auto;
+    text-align: center;
+    display: block;
 }
 .single-vicle {
     overflow: hidden;
@@ -64,7 +66,7 @@ div#vaclelist div.description-desc div.vacle-details div.taxi-shadow {
     padding: 5px 0;
 }
 .part-details.select-button {
-    padding: 12px 0;
+    /* padding: 12px 0; */
 }
 .image-vicle {
     box-shadow: 2px 3px 0.2em #666;
