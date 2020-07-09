@@ -41,9 +41,10 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
   <div class="inner-bacle-list">
       <?php foreach($allvicles as $sv): 
         // Extra Service item images
-        
-
-        
+        $baby_set_over_5_img  = get_field('baby_set_over_5_img', $sv->ID) ? wp_get_attachment_url( get_field('baby_set_over_5_img', $sv->ID)['id'] ) : $this->plugin_url . 'asset/img/baby-set.jpg'; 
+        $baby_set_under_5_img = get_field('baby_set_under_5_img', $sv->ID) ? wp_get_attachment_url( get_field('baby_set_under_5_img', $sv->ID)['id'] ) : $this->plugin_url . 'asset/img/baby-seat.jpg';
+        $meet_n_greet_img     = get_field('meet_n_greet_img', $sv->ID) ? wp_get_attachment_url( get_field('meet_n_greet_img', $sv->ID)['id'] ) : $this->plugin_url . 'asset/img/meet-and-greet-banner01.png';
+        $car_park_img         = get_field('car_park_img', $sv->ID) ? wp_get_attachment_url( get_field('car_park_img', $sv->ID)['id'] ) : $this->plugin_url . 'asset/img/car-park.png';
         ?>
           <div class="single-vicle">
               <!-- Image -->
@@ -58,19 +59,19 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
               <!-- Start Description -->
                <div class="description-desc">
                   <div class="innerdesc">
-                      <h4><?php echo $sv->post_title; ?></h4>
+                      <h4 class="mt-0"><?php echo $sv->post_title; ?></h4>
                       <div class="vacle-details">
 
                           <!-- Details -->
                           <div class="part-details">
                               <div class="taxi-shadow">
-                              <p class="text-center mb-0">
+                              <p class="text-center mb-0 mt-0">
                               <span class="numberofpassenger">
                                 <span class="number"><?php echo get_field('number_of_passengers', $sv->ID); ?></span>
                                 <?php _e('Passengers', 'taxi-rent'); ?>
                               </span>
                               </p>
-                              <p class="text-center mb-0">
+                              <p class="text-center mb-0 mt-0">
                               <span class="numberofluges">
                                 <span class="number"><?php echo get_field('number_of_luggage', $sv->ID); ?></span>
                                 <?php _e('Luggage', 'taxi-rent'); ?>
@@ -84,20 +85,24 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                           <!-- Price -->
                           <div class="part-details price">
                             <div class="taxi-shadow">
-                              <p class="mb-0 text-center"><span class="price">$ <?php echo $this->vehicle_price($sv->ID); ?></span></p>
-                              <p class="text-center mb-0"><span class="vatincluded text-center">(<?php echo sprintf('including %s vat', get_option('taxi_vat', 0) . '%'); ?>)</span></p>
+                              <p class="mb-0 mt-0 text-center"><span class="price"><?php echo get_woocommerce_currency_symbol(); ?> <?php echo $this->vehicle_price($sv->ID); ?></span></p>
+                              <!-- <p class="text-center mb-0"><span class="vatincluded text-center">(<?php //echo sprintf('including %s vat', get_option('taxi_vat', 0) . '%'); ?>)</span></p> -->
                             </div>
                           </div>
 
                           <!-- Select Button -->
                           <div class="part-details select-button">
                               <a href="#" 
+                                data-baby_set_over_5_img = "<?php echo $baby_set_over_5_img; ?>"
+                                data-baby_set_under_5_img = "<?php echo $baby_set_under_5_img; ?>"
+                                data-meet_n_greet_img = "<?php echo $meet_n_greet_img; ?>"
+                                data-car_park_img = "<?php echo $car_park_img; ?>"
                                 data-post_id = "<?php echo $sv->ID; ?>" 
                                 data-baby_over_5="<?php echo get_field('baby_over_5', $sv->ID) ?  get_field('baby_over_5', $sv->ID) : 0; ?>" 
                                 data-baby_under_5="<?php echo get_field('baby_under_5', $sv->ID); ?>" 
                                 data-meet_n_greet="<?php echo get_field('meet_n_greet', $sv->ID); ?>" 
                                 data-car_park="<?php echo get_field('car_park', $sv->ID); ?>" 
-                                data-amount="<?php echo $this->vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primar online-payment"><?php echo get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') ); ?>
+                                data-amount="<?php echo $this->vehicle_price($sv->ID); ?>" class="btn-taxi-rent btn btn-primary online-payment"><?php echo get_option( 'tr_car_select_btn', __('Select Car', 'taxi-rent') ); ?>
                               </a>
                           </div>
 
@@ -128,14 +133,14 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
 
                      <div class="col-sm-3 col-xs-3 col-md-3 text-center">
                           <div class="imageDiv">
-                            <img src="<?php echo $this->plugin_url; ?>asset/img/baby-set.jpg" alt="<?php _e('Baby Seat', 'taxi-rent'); ?>">
+                            <img class="child_over_5" src="<?php echo $this->plugin_url; ?>asset/img/baby-set.jpg" alt="<?php _e('Baby Seat', 'taxi-rent'); ?>">
                           </div>
                           <h6><?php _e('Baby Seat ( Child Over 5 Years)', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="baby_over_5"></span>)</h6>
                           <input name="baby_set_over_5" id="baby_set_over_5" type="checkbox" data-toggle="toggle" data-size="sm">
                       </div>
                       <div class="col-sm-3 col-xs-3 col-md-3 text-center">
                           <div class="imageDiv">    
-                            <img src="<?php echo $this->plugin_url; ?>asset/img/baby-seat.jpg" alt="<?php _e('Baby Seat Under 5 years', 'taxi-rent'); ?>">
+                            <img class="child_under_5" src="<?php echo $this->plugin_url; ?>asset/img/baby-seat.jpg" alt="<?php _e('Baby Seat Under 5 years', 'taxi-rent'); ?>">
                           </div>
                           <h6><?php _e('Baby Seat ( Child Under 5 Years)', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="baby_under_5"></span>)</h6>
                           <input name="baby_set_under_5" id="baby_set_under_5" type="checkbox" data-toggle="toggle" data-size="sm">
@@ -143,14 +148,14 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                       <div class="col-sm-3 col-xs-3 col-md-3 text-center">
                           
                           <div class="imageDiv">
-                            <img src="<?php echo $this->plugin_url; ?>asset/img/meet-and-greet-banner01.png" alt="<?php _e('Meet & Greet', 'taxi-rent'); ?>">
+                            <img class="meat_n_greet" src="<?php echo $this->plugin_url; ?>asset/img/meet-and-greet-banner01.png" alt="<?php _e('Meet & Greet', 'taxi-rent'); ?>">
                           </div>
                           <h6><?php _e('Meet & Greet', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="meet_n_greet"></span>)</h6>
                           <input name="meet_n_greet" id="meet_n_greet" type="checkbox" data-toggle="toggle" data-size="sm">
                       </div>
                       <div class="col-sm-3 col-xs-3 col-md-3 text-center">
                             <div class="imageDiv">
-                              <img src="<?php echo $this->plugin_url; ?>asset/img/car-park.png" alt="<?php _e('Car Park', 'taxi-rent'); ?>">
+                              <img class="car_park" src="<?php echo $this->plugin_url; ?>asset/img/car-park.png" alt="<?php _e('Car Park', 'taxi-rent'); ?>">
                             </div>
                           
                             <h6><?php _e('Car Park', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="car_park"></span>)</h6>
@@ -444,5 +449,7 @@ wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?k
 wp_enqueue_style( 'bootstrap-css-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css', array(), true, 'all' );
 wp_enqueue_script( 'bootstrap-js-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array(), true );
 wp_enqueue_script( 'jquery-form-validate', 'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js', array('jquery'), time(), true ); 
+  wp_enqueue_style( 'FontAwesomeFromCDN', 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', array(), true, 'all' );
+  
 ?>
 <?php endif; ?>

@@ -1,3 +1,7 @@
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 jQuery(document).ready(function(e){
     'use strict';
 
@@ -36,7 +40,7 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
       
       if(length < 3){
         var className = (jQuery(this).hasClass('local')) ? 'drop_off' : 'drop_off_port';
-        var html = '<div class="single-via mb-3">'
+        var html = '<div class="single-via mb-1">'
         +'<input type="text" class="w-100 '+className+'" placeholder="Stop Address" name="drop_off[]">'
         +'<span class="delete_via"> <i class="fa fa-minus-circle" aria-hidden="true"></i> </span>'
         +'</div>';
@@ -98,12 +102,16 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
     jQuery('form#other_service input').change(function(){
           var thisprice = jQuery(this).closest('div.toggle').prev('h6').find('span').text();
           var price = jQuery('strong.priceAfterAddService').text();
+          price = price.replace(/,/g, '');
+
               
           if(jQuery(this).is(':checked')){
             var newPrice = +price + +thisprice;
           }else{
             var newPrice = +price + -thisprice;
           }
+
+          newPrice = numberWithCommas(newPrice);
           jQuery('strong.priceAfterAddService').text(newPrice.toFixed(2));
           jQuery('input[name="taxi_rent_amount"]').val(newPrice.toFixed(2));
           
@@ -126,11 +134,15 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
         vehicle_id = jQuery(this).data('post_id');
         e.preventDefault();
         var bodywidth = jQuery(document.body).width();
-        console.log('bodywidth: ' + bodywidth);
+        
         jQuery('form#other_service span.baby_over_5').text( jQuery(this).data('baby_over_5'));
         jQuery('form#other_service span.baby_under_5').text( jQuery(this).data('baby_under_5'));
         jQuery('form#other_service span.meet_n_greet').text( jQuery(this).data('meet_n_greet'));
         jQuery('form#other_service span.car_park').text( jQuery(this).data('car_park'));
+        jQuery('img.child_over_5').attr('src', jQuery(this).data('baby_set_over_5_img'));
+        jQuery('img.child_under_5').attr('src', jQuery(this).data('baby_set_under_5_img'));
+        jQuery('img.meat_n_greet').attr('src', jQuery(this).data('meet_n_greet_img'));
+        jQuery('img.car_park').attr('src', jQuery(this).data('car_park_img'));
 
 
         jQuery('div#online-booking-form').fadeIn('slow', function(){
@@ -145,6 +157,20 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
             marginLeft: marginLeft + 'px' 
           })
         });
+    });
+
+
+    
+    /*
+    * Payment Option resize while window resize
+    */
+    jQuery(window).resize(function(){
+      var bodywidth = jQuery(document.body).width(),
+      formwidth = jQuery('div#online-booking-form > div.form-online-inner').outerWidth(),
+      marginLeft = (bodywidth > 768) ? (bodywidth - formwidth) / 2 : 0;
+      jQuery('div#online-booking-form > div.form-online-inner').animate({
+        marginLeft: marginLeft + 'px' 
+      })
     });
 
 

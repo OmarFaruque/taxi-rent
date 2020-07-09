@@ -62,7 +62,7 @@ $quote_url = get_the_permalink( get_option('quote_page') );
 
     <div id="portListsArea" class="form-group">
         <!-- <input type="text" class="w-100" name="destination_airport" id="destination_airport"> -->
-        <select name="destination_airport" class="form-control" id="destination_airport_select">
+        <select name="destination_airport" class="form-control w-100" id="destination_airport_select">
             <option value=""><?php _e('Please Select Airport or Seaport', 'taxi-rent'); ?></option>
             <?php 
             if(get_option('portlists')):
@@ -75,7 +75,7 @@ $quote_url = get_the_permalink( get_option('quote_page') );
             ?>
         </select>
     </div>
-    <div class="form-group" id="way">
+    <div class="form-group mt-1" id="way">
         <label for="one_way">
             <input type="radio" name="way" id="one_way" checked value="1">
             <?php _e('One Way', 'taxi-rent'); ?>

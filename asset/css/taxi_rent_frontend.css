@@ -34,14 +34,20 @@ div#way > label {
 div#vaclelist div.description-desc div.vacle-details > div {
     width: 190px;
     float: left;
+    max-width: 50%;
 }
 div#vaclelist div.description-desc div.vacle-details > div:last-child{
-    width: 20%;
+    /* width: 20%; */
 }
 
 div.select-button a.btn-taxi-rent {
     background: #bb1111;
     color: white;
+    text-decoration: none;
+    padding: 7px 15px;
+    width: 100%;
+    border-radius: 5px;
+    margin: 0 auto;
 }
 .single-vicle {
     overflow: hidden;
@@ -75,6 +81,7 @@ div#online-booking-form {
     left: 0;
     display: none;
     z-index: 9;
+    max-width: unset;
 }
 .form-online-inner {
     max-width: 800px;
@@ -108,6 +115,7 @@ form#other_service .btn-sm:not(.toggle-off){
     padding-top: 4px;
     padding-left: 0;
     padding-bottom: 0;
+    margin: 0 auto;
 }
 form#other_service .btn-sm.toggle-off{
     padding-top: 4px;
@@ -285,7 +293,15 @@ div#removeContinue i {
 
 @media screen and (min-width: 411px){
     div#vaclelist div.description-desc {
-        width: calc(100% - 250px);
-        float: right;
+        width: calc(100% - 30%);
+        float: left;
+        padding-left: 30px;
     }    
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    border: 1px solid #b9843f;
+    background: #BC8C4D;
+    font-weight: normal;
+    color: #fff;
 }
