@@ -5,8 +5,8 @@
         <table class="table table-striped" id="ul_inner_list">
             <thead class="thead-dark">
                 <tr>
-                    <th><?php _e('Port A', 'taxi-rent'); ?></th>
-                    <th><?php _e('Port B', 'taxi-rent'); ?></th>
+                    <th><?php _e('Town List', 'taxi-rent'); ?></th>
+                    <th><?php _e('Port List', 'taxi-rent'); ?></th>
                     <th><?php _e('Price', 'taxi-rent'); ?></th>
                     <th><?php _e('Action', 'taxi-rent'); ?></th>
                 </tr>
@@ -44,8 +44,8 @@
                             <form id="addPortList" action="" method="post">
                                 <label for="port_a"><?php _e('Add Port List', 'taxt-rent'); ?></label>
                                 <div class="input-group mb-3">
-                                    <input required id="port_a" class="form-control" placeholder="<?php _e('Port A', 'taxi-rent'); ?>" type="text" name="port_a">
-                                    <input required id="port_b" class="form-control" placeholder="<?php _e('Port B', 'taxi-rent'); ?>" type="text" name="port_b">
+                                    <input required id="port_a" class="form-control" placeholder="<?php _e('Town Name', 'taxi-rent'); ?>" type="text" name="port_a">
+                                    <input required id="port_b" class="form-control" placeholder="<?php _e('Port Name', 'taxi-rent'); ?>" type="text" name="port_b">
                                     <input required id="price" class="form-control" type="number" placeholder="<?php _e('Price', 'taxi-rent'); ?>" name="port_price">
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-outline-secondary" id="addAddressButton" type="button"><span class="pt-4-px dashicons dashicons-plus"></span></button>
