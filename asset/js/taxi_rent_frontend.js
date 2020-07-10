@@ -2,8 +2,65 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-jQuery(document).ready(function(e){
+jQuery(document).ready(function(){
     'use strict';
+    jQuery(document.body).on('click', 'a.online-payment', function(e){
+      e.preventDefault();
+        var rent_amount = jQuery(this).data('amount'),
+        vehicle_id = jQuery(this).data('post_id');
+        
+        var bodywidth = jQuery(document.body).width();
+        
+        jQuery('form#other_service span.baby_over_5').text( jQuery(this).data('baby_over_5'));
+        jQuery('form#other_service span.baby_under_5').text( jQuery(this).data('baby_under_5'));
+        jQuery('form#other_service span.meet_n_greet').text( jQuery(this).data('meet_n_greet'));
+        jQuery('form#other_service span.car_park').text( jQuery(this).data('car_park'));
+        jQuery('img.child_over_5').attr('src', jQuery(this).data('baby_set_over_5_img'));
+        jQuery('img.child_under_5').attr('src', jQuery(this).data('baby_set_under_5_img'));
+        jQuery('img.meat_n_greet').attr('src', jQuery(this).data('meet_n_greet_img'));
+        jQuery('img.car_park').attr('src', jQuery(this).data('car_park_img'));
+
+
+        jQuery('div#online-booking-form').fadeIn('slow', function(){
+          var form = jQuery('div#online-booking-form > div.form-online-inner form'),
+          formwidth = jQuery('div#online-booking-form > div.form-online-inner').outerWidth(),
+          marginLeft = (bodywidth > 768) ? (bodywidth - formwidth) / 2 : 0;
+          form.find('input[name="taxi_rent_amount"]').val(rent_amount);
+          form.find('input[name="vehicle_id"]').val(vehicle_id);
+          
+          jQuery('strong.priceAfterAddService').text(rent_amount);
+          jQuery('div#online-booking-form > div.form-online-inner').animate({
+            marginLeft: marginLeft + 'px' 
+          })
+        });
+    });
+
+
+    /*
+    * Step 2 Add additional Service fee
+    */
+   if(jQuery('form#other_service').length){
+    jQuery('form#other_service input').change(function(){
+          var thisprice = jQuery(this).closest('div.additionalService').find('h6').find('span').text();
+          var price = jQuery('strong.priceAfterAddService').text();
+          price = price.replace(/,/g, '');
+
+              
+          if(jQuery(this).is(':checked')){
+            var newPrice = +price + +thisprice;
+          }else{
+            var newPrice = +price + -thisprice;
+          }
+
+          newPrice = numberWithCommas(newPrice);
+          newPrice = parseFloat(newPrice);
+          
+          jQuery('strong.priceAfterAddService').text(newPrice.toFixed(2));
+          jQuery('input[name="taxi_rent_amount"]').val(newPrice.toFixed(2));
+          
+      });
+    }
+
 
 
 
@@ -92,74 +149,16 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
     });
   }
 
-
-
-
-    /*
-    * Step 2 Add additional Service fee
-    */
-   if(jQuery('form#other_service').length){
-    jQuery('form#other_service input').change(function(){
-          var thisprice = jQuery(this).closest('div.toggle').prev('h6').find('span').text();
-          var price = jQuery('strong.priceAfterAddService').text();
-          price = price.replace(/,/g, '');
-
-              
-          if(jQuery(this).is(':checked')){
-            var newPrice = +price + +thisprice;
-          }else{
-            var newPrice = +price + -thisprice;
-          }
-
-          newPrice = numberWithCommas(newPrice);
-          jQuery('strong.priceAfterAddService').text(newPrice.toFixed(2));
-          jQuery('input[name="taxi_rent_amount"]').val(newPrice.toFixed(2));
-          
-      });
-    }
-
-
-
-    if(jQuery('div#online-booking-form').length){
+  if(jQuery('div#online-booking-form').length){
       var bodyheight = window.innerHeight,
       formHeight = bodyheight - 100;
 
       jQuery('div#online-booking-form > div.form-online-inner').css('margin-top', '50px');
       jQuery('div#online-booking-form > div.form-online-inner').css('max-height', formHeight + 'px');
 
-    }
+  }
     
-    jQuery(document).on('click', 'a.online-payment', function(e){
-        var rent_amount = jQuery(this).data('amount'),
-        vehicle_id = jQuery(this).data('post_id');
-        e.preventDefault();
-        var bodywidth = jQuery(document.body).width();
-        
-        jQuery('form#other_service span.baby_over_5').text( jQuery(this).data('baby_over_5'));
-        jQuery('form#other_service span.baby_under_5').text( jQuery(this).data('baby_under_5'));
-        jQuery('form#other_service span.meet_n_greet').text( jQuery(this).data('meet_n_greet'));
-        jQuery('form#other_service span.car_park').text( jQuery(this).data('car_park'));
-        jQuery('img.child_over_5').attr('src', jQuery(this).data('baby_set_over_5_img'));
-        jQuery('img.child_under_5').attr('src', jQuery(this).data('baby_set_under_5_img'));
-        jQuery('img.meat_n_greet').attr('src', jQuery(this).data('meet_n_greet_img'));
-        jQuery('img.car_park').attr('src', jQuery(this).data('car_park_img'));
-
-
-        jQuery('div#online-booking-form').fadeIn('slow', function(){
-          var form = jQuery('div#online-booking-form > div.form-online-inner form'),
-          formwidth = jQuery('div#online-booking-form > div.form-online-inner').outerWidth(),
-          marginLeft = (bodywidth > 768) ? (bodywidth - formwidth) / 2 : 0;
-          form.find('input[name="taxi_rent_amount"]').val(rent_amount);
-          form.find('input[name="vehicle_id"]').val(vehicle_id);
-          
-          jQuery('strong.priceAfterAddService').text(rent_amount);
-          jQuery('div#online-booking-form > div.form-online-inner').animate({
-            marginLeft: marginLeft + 'px' 
-          })
-        });
-    });
-
-
+ 
     
     /*
     * Payment Option resize while window resize
@@ -206,8 +205,8 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
       
       
 
-    })
-});
+    });
+}); // Document load end
 
 
 

@@ -111,6 +111,7 @@ div#switchDirection{
 }
 div#switchDirection span{
     display: table-cell;
+    vertical-align: middle;
 }
 
 form#other_service .btn-sm:not(.toggle-off){

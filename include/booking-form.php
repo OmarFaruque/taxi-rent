@@ -240,7 +240,7 @@ AutocompleteDirectionsHandler.prototype.airputroute = function() {
       jQuery('form#portForm').find('input[name="distance"]').val(distance);
       jQuery('form#portForm').find('input[type="submit"]').prop('disabled', false);
     } else {
-      window.alert('Directions request failed due to ' + status);
+      window.alert('The area is outside 2miles from your address please choose area which is near to you.');
     }
   });
 };
