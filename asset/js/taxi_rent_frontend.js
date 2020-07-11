@@ -4,6 +4,29 @@ function numberWithCommas(x) {
 
 jQuery(document).ready(function(){
     'use strict';
+
+
+
+   var addCol = function(){
+      if(jQuery('div#vaclelist').width() < 600 ){
+        jQuery('div#vaclelist').addClass('two_col');
+      }else{
+        jQuery('div#vaclelist').removeClass('two_col');
+      }
+   }
+   
+   if(jQuery('div#vaclelist').length){
+      addCol();
+   }
+   jQuery(window).resize(function(){
+    addCol();
+   });
+
+    
+    
+
+
+
     jQuery(document.body).on('click', 'a.online-payment', function(e){
       e.preventDefault();
         var rent_amount = jQuery(this).data('amount'),
@@ -64,6 +87,29 @@ jQuery(document).ready(function(){
 
 
 
+  if(jQuery('div#online-booking-form').length){
+    var bodyheight = window.innerHeight,
+    formHeight = bodyheight - 100;
+    jQuery('div#online-booking-form > div.form-online-inner').css('margin-top', '50px');
+    jQuery('div#online-booking-form > div.form-online-inner').css('max-height', formHeight + 'px');
+  }
+
+
+  /*
+    * Next button
+  **/
+  if(jQuery('button.booking-form.next').length){
+    console.log('tst omar');
+    jQuery(document.body).on('click', 'button.booking-form.next', function(e){
+      e.preventDefault();
+      jQuery('div#online-booking-form').find('div.part-one').addClass('d-none');
+      jQuery('div#online-booking-form').find('div.part-tow').slideUp('slow', function(){
+          jQuery('div#online-booking-form').find('div.part-tow').removeClass('d-none');  
+      });
+    });
+  }
+
+
   /*
   * Hide Payment Form
   */
@@ -83,6 +129,7 @@ jQuery(document).ready(function(){
   /*
   * Form Validattion 
   */
+
  if(jQuery("#comfirmByPayment").length) { 
     jQuery("#comfirmByPayment").validate();
  }
@@ -134,31 +181,6 @@ if(jQuery('.adddropoff > span.addDropOffButton').length){
    });
  }
 
-
-  
-  /*
-  * Next button
-  **/
-  if(jQuery('button.booking-form.next').length){
-    jQuery(document).on('click', 'button.booking-form.next', function(e){
-      e.preventDefault();
-      jQuery('div#online-booking-form').find('div.part-one').addClass('d-none');
-      jQuery('div#online-booking-form').find('div.part-tow').slideUp('slow', function(){
-          jQuery('div#online-booking-form').find('div.part-tow').removeClass('d-none');  
-      });
-    });
-  }
-
-  if(jQuery('div#online-booking-form').length){
-      var bodyheight = window.innerHeight,
-      formHeight = bodyheight - 100;
-
-      jQuery('div#online-booking-form > div.form-online-inner').css('margin-top', '50px');
-      jQuery('div#online-booking-form > div.form-online-inner').css('max-height', formHeight + 'px');
-
-  }
-    
- 
     
     /*
     * Payment Option resize while window resize

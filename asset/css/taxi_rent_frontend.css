@@ -31,13 +31,22 @@ div#way > label {
     display: inline-block;
 }
 
-div#vaclelist div.description-desc div.vacle-details > div {
+div#vaclelist:not(.two_col) div.description-desc div.vacle-details > div {
     width: 33.33%;
+    float: left;
+    max-width: 50%;
+}
+div#vaclelist.two_col div.description-desc div.vacle-details > div {
+    width: 50%;
     float: left;
     max-width: 50%;
 }
 div#vaclelist div.description-desc div.vacle-details > div:last-child{
     /* width: 20%; */
+}
+div#vaclelist.two_col div.description-desc div.vacle-details .part-details.select-button {
+    margin-top: 10px;
+    max-width: 140px;
 }
 
 div.select-button a.btn-taxi-rent {
@@ -172,6 +181,7 @@ form#other_service .btn-sm.toggle-off{
 }
 form#comfirmByPayment label.error {
     color: red;
+    font-weight: normal;
     font-size: 14px;
 }
 form#comfirmByPayment input.error{
@@ -295,6 +305,10 @@ div#removeContinue i {
 }
 
 @media screen and (min-width: 411px){
+    div#vaclelist.two_col div.description-desc div.vacle-details .part-details.select-button{
+        max-width: unset;
+    }
+
     div#vaclelist div.description-desc {
         width: calc(100% - 30%);
         float: left;
@@ -307,4 +321,27 @@ div#removeContinue i {
     background: #BC8C4D;
     font-weight: normal;
     color: #fff;
+}
+form#comfirmByPayment .form-control:not(.error) {
+    margin-bottom: 15px;
+}
+
+@media only screen and (max-width: 411px){
+    .single-vicle div.image-vicle {
+        max-width: 100%;
+        width: 311px;
+        float: left;
+        margin-bottom: 20px;
+    }
+    div#vaclelist div.description-desc {
+        width: 100%;
+        float: left;
+        padding-left: 10px;
+    }    
+    
+}
+
+
+div#vaclelist.two_col div.description-desc div.vacle-details > div.price > div{
+    margin: 0;
 }

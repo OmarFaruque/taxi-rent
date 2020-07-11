@@ -342,13 +342,8 @@ if(!class_exists('taxiClass')){
             wp_enqueue_script( 'blockui', $this->plugin_url . 'asset/js/jquery.blockUI.js', array('jquery'), time(), true ); 
             wp_enqueue_script( 'jquery-form-validate', 'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js', array('jquery'), time(), true ); 
                 
-                wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key='.get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ').'&libraries=places&callback=initMap', time(), true ); 
-                wp_enqueue_style( 'bootstrap-css-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css', array(), true, 'all' );
-                wp_enqueue_script( 'bootstrap-js-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array(), true );
-                
-                // wp_enqueue_script( 'bootstrap-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', array('jquery'), true );
-                wp_enqueue_style( 'FontAwesomeFromCDN', 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', array(), true, 'all' );
-
+            // wp_enqueue_script( 'bootstrap-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', array('jquery'), true );
+            
 
             wp_enqueue_script('TaxiRentJSs', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery'), time(), true);
         }

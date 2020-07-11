@@ -136,7 +136,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                             <img class="child_over_5" src="<?php echo $this->plugin_url; ?>asset/img/baby-set.jpg" alt="<?php _e('Baby Seat', 'taxi-rent'); ?>">
                           </div>
                           <h6><?php _e('Baby Seat ( Child Over 5 Years)', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="baby_over_5"></span>)</h6>
-                          <div class="mt-1">
+                          <div class="mt-2">
                             <input name="baby_set_over_5" id="baby_set_over_5" type="checkbox" data-toggle="toggle" data-size="sm">
                           </div>
                       </div>
@@ -145,7 +145,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                             <img class="child_under_5" src="<?php echo $this->plugin_url; ?>asset/img/baby-seat.jpg" alt="<?php _e('Baby Seat Under 5 years', 'taxi-rent'); ?>">
                           </div>
                           <h6><?php _e('Baby Seat ( Child Under 5 Years)', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="baby_under_5"></span>)</h6>
-                          <div class="mt-1">
+                          <div class="mt-2">
                             <input name="baby_set_under_5" id="baby_set_under_5" type="checkbox" data-toggle="toggle" data-size="sm">
                           </div>
                       </div>
@@ -155,7 +155,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                             <img class="meat_n_greet" src="<?php echo $this->plugin_url; ?>asset/img/meet-and-greet-banner01.png" alt="<?php _e('Meet & Greet', 'taxi-rent'); ?>">
                           </div>
                           <h6><?php _e('Meet & Greet', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="meet_n_greet"></span>)</h6>
-                          <div class="mt-1">
+                          <div class="mt-2">
                             <input name="meet_n_greet" id="meet_n_greet" type="checkbox" data-toggle="toggle" data-size="sm">
                           </div>
                       </div>
@@ -165,7 +165,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                             </div>
                           
                             <h6><?php _e('Car Park', 'taxi-rent'); ?>&nbsp;(<?php echo get_woocommerce_currency_symbol(); ?><span class="car_park"></span>)</h6>
-                            <div class="mt-1 ">
+                            <div class="mt-2 ">
                               <input name="car_park" id="car_park" type="checkbox" data-toggle="toggle" data-size="sm">
                             </div>
                       </div>
@@ -213,7 +213,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                   <div class="col-md-6 col-xs-12">
                     <div class="form-group">
                       <label for="contact_number"><?php _e('Contact Number', 'taxi_rent'); ?>*</label>
-                      <input required type="tel" name="contact_number" id="contact_number" class="form-control">
+                      <input required type="tel" name="contact_number" data-rule-minlength="11" id="contact_number" class="form-control">
                     </div>
                   </div>
 
@@ -232,7 +232,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                 <!-- Passanger Name -->
                 <div class="col-md-6 col-xs-12">
                     <div class="form-group">
-                      <label for="passenger_name"><?php _e('Lead passenger*', 'taxi_rent'); ?></label>
+                      <label for="passenger_name"><?php _e('Passenger Name*', 'taxi_rent'); ?></label>
                       <input required type="text" name="passenger_name" id="passenger_name" class="form-control">
                     </div>
                 </div>
@@ -454,4 +454,9 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
 <?php endif; ?>
 
-
+<?php
+wp_enqueue_style( 'FontAwesomeFromCD', 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', array(), true, 'all' );
+wp_enqueue_style( 'bootstrap-css-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css', array(), true, 'all' );
+wp_enqueue_script( 'bootstrap-js-toggle', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array(), true );
+wp_enqueue_script( 'taxi-google-map', 'https://maps.googleapis.com/maps/api/js?key='.get_option('map_api', 'AIzaSyDIvHe8zwX9-D5YE39wEAqseTtsRP7EyvQ').'&libraries=places&callback=initMap', time(), true ); 
+?>
