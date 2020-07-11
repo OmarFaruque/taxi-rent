@@ -67,19 +67,19 @@ jQuery(document).ready(function(){
           var thisprice = jQuery(this).closest('div.additionalService').find('h6').find('span').text();
           var price = jQuery('strong.priceAfterAddService').text();
           price = price.replace(/,/g, '');
-
-              
+    
           if(jQuery(this).is(':checked')){
-            var newPrice = +price + +thisprice;
+            var newPrice = +price + +thisprice;          
           }else{
             var newPrice = +price + -thisprice;
           }
 
+          newPrice = newPrice.toFixed(2);
+
           newPrice = numberWithCommas(newPrice);
-          newPrice = parseFloat(newPrice);
           
-          jQuery('strong.priceAfterAddService').text(newPrice.toFixed(2));
-          jQuery('input[name="taxi_rent_amount"]').val(newPrice.toFixed(2));
+          jQuery('strong.priceAfterAddService').text(newPrice);
+          jQuery('input[name="taxi_rent_amount"]').val(newPrice);
           
       });
     }
