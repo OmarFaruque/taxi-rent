@@ -203,11 +203,6 @@ if(!class_exists('taxiClass')){
         * Woocommerce payment process
         */
         protected function woocommercer_payment_process(){
-
-            // echo '<pre>';
-            // print_r($_POST);
-            // echo '</pre>';
-
             $product = get_taxi_product();
             if ($product) {
                 add_filter('woocommerce_add_cart_item_data', array($this, 'add_taxi_product_price_to_cart_item_data'), 10, 2);
@@ -227,8 +222,7 @@ if(!class_exists('taxiClass')){
                 wc()->cart->add_to_cart($product->get_id(), 1, '0', array(), $metas);
 
                 $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
-                wp_safe_redirect($redirect_url);
-                exit();
+                echo '<script>window.location.replace("'.$redirect_url.'");</script>';
             }
         }
 
