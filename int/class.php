@@ -222,6 +222,7 @@ if(!class_exists('taxiClass')){
                 wc()->cart->add_to_cart($product->get_id(), 1, '0', array(), $metas);
 
                 $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
+                // echo 'redirect url: ' . $redirect_url . '<br/>';
                 echo '<script>window.location.replace("'.$redirect_url.'");</script>';
             }
         }
