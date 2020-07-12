@@ -28,7 +28,7 @@ if(!class_exists('taxiClass')){
             //create custom meta box
             add_action( 'init', array($this, 'createNecesaryPostType'));
             add_action('init', array($this, 'my_acf_add_local_field_groups'));
-            add_action('init', array($this, 'paymentFormSubmit'));
+            add_action('wp_head', array($this, 'paymentFormSubmit'));
 
             // Booking form Shortcode
             add_shortcode( 'taxi-booking', array($this, 'taxiBookingFormShortcodeCallback') );
@@ -213,8 +213,8 @@ if(!class_exists('taxiClass')){
                 add_filter('woocommerce_add_cart_item_data', array($this, 'add_taxi_product_price_to_cart_item_data'), 10, 2);
                 wc()->cart->empty_cart();
                 $metas = array();
-                $posts = $_POST;
-                
+                $posts = $_POST;              
+               
                 unset($posts['woocommerce-edit-address-nonce']);
                 unset($posts['save-account-details-nonce']);
                 unset($posts['woocommerce-reset-password-nonce']);
@@ -225,6 +225,7 @@ if(!class_exists('taxiClass')){
                 $metas['taxi-meta'] = $posts;
                 
                 wc()->cart->add_to_cart($product->get_id(), 1, '0', array(), $metas);
+
                 $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
                 wp_safe_redirect($redirect_url);
                 exit();
@@ -676,21 +677,18 @@ if(!class_exists('taxiClass')){
             // echo '<pre>';
             // print_r($_REQUEST);
             // echo '</pre>';
-
-
-
             $distance = isset($_REQUEST['distance']) ? $_REQUEST['distance'] : 0;
             $firstMilePrice = 0;
             $price = 0;
 
-
-            if($distance > 1000){
+            if($distance > 1609.34){
                 $price = get_field('first_mile_price', $postid);
-                $distance = $distance - 1000;
+                $distance = $distance - 1609.34;
             }
             if(get_field('price', $postid)){
-                $price_per_mitr = get_field('price', $postid) / 1000;
-                $price = ($price_per_mitr * $distance) + $price;
+                $miles = $distance / 1609.34;
+                $priceOther = get_field('price', $postid) * $miles;
+                $price = $priceOther + $price;
             }
 
             // Add Way 
