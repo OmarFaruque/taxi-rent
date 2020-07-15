@@ -330,13 +330,13 @@ if(!class_exists('taxiClass')){
         function taxi_rent_frontend_script(){
             wp_enqueue_script( 'jquery-ui-tabs' );
             
-            wp_enqueue_style( 'jquery-ui-css', 'http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css', time(), 'all' );
+            wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css', time(), 'all' );
             wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_frontend.css', array(), true, 'all' );
             
             
             wp_enqueue_script( 'jquery-ui-cdn', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', array('jquery'), time(), true  );
             wp_enqueue_script( 'blockui', $this->plugin_url . 'asset/js/jquery.blockUI.js', array('jquery'), time(), true ); 
-            wp_enqueue_script( 'jquery-form-validate', 'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js', array('jquery'), time(), true ); 
+            wp_enqueue_script( 'jquery-form-validate', 'https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js', array('jquery'), time(), true ); 
                 
             // wp_enqueue_script( 'bootstrap-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', array('jquery'), true );
             
