@@ -152,6 +152,7 @@ function acf_get_url( $filename = '' ) {
  */
 function acf_include( $filename = '' ) {
 	$file_path = acf_get_path($filename);
+	// echo 'name: ' . $file_path . '<br/>';
 	if( file_exists($file_path) ) {
 		include_once($file_path);
 	}

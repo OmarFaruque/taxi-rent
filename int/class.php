@@ -694,7 +694,7 @@ if(!class_exists('taxiClass')){
 
             // fixed Price Calculate for port
             if(isset($_POST['destination_airport']) && !empty($_POST['destination_airport'])){
-    
+                $price = 0;
                 if(get_option('portlists')):
                     $portlists = json_decode(get_option('portlists'));
                     foreach($portlists as $s){
