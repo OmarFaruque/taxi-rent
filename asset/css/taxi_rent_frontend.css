@@ -349,11 +349,7 @@ div#vaclelist.two_col div.description-desc div.vacle-details > div.price > div{
 .additionalService h6 {
     margin: 0.5rem auto 2.5rem !important;
 }
-.btn-primary {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-}
+
 .btn {
     display: inline-block;
     font-weight: 400;
@@ -367,14 +363,18 @@ div#vaclelist.two_col div.description-desc div.vacle-details > div.price > div{
     background-color: transparent;
     border: 1px solid transparent;
     padding: .375rem .75rem;
-    font-size: 1rem;
     line-height: 1.5;
     border-radius: .25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 .btn-group-sm>.btn, .btn-sm {
     padding: .25rem .5rem;
-    font-size: .875rem;
+    font-size: 1rem;
     line-height: 1.5;
     border-radius: .2rem;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
 }
