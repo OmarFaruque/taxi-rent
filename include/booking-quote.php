@@ -220,7 +220,7 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
                   <div class="col-md-6 col-xs-12">
                     <div class="form-group">
                       <label for="contact_email"><?php _e('Your E-mail Address', 'taxi_rent'); ?>*</label>
-                      <input required type="mail" name="contact_email" id="contact_email" class="form-control">
+                      <input required type="email" name="contact_email" id="contact_email" class="form-control">
                     </div>
                   </div>
               </div>
