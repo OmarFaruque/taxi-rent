@@ -326,7 +326,7 @@ form#comfirmByPayment .form-control:not(.error) {
     margin-bottom: 15px;
 }
 
-@media only screen and (max-width: 411px){
+@media only screen and (max-width: 460px){
     .single-vicle div.image-vicle {
         max-width: 100%;
         width: 311px;
@@ -344,4 +344,8 @@ form#comfirmByPayment .form-control:not(.error) {
 
 div#vaclelist.two_col div.description-desc div.vacle-details > div.price > div{
     margin: 0;
+}
+
+.additionalService h6 {
+    margin: 0.5rem auto 2.5rem;
 }

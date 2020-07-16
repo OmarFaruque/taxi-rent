@@ -38,3 +38,5 @@ if(!function_exists('get_taxi_product')){
             return wc_get_product(apply_filters( 'taxi_product_id', get_option( '_woo_taxi_rent_product' ) ));
     }
 }
+
+

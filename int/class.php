@@ -189,8 +189,7 @@ if(!class_exists('taxiClass')){
          * @return boolean
          */
         public function restrict_other_from_add_to_cart($valid) {
-            
-            if (is_wallet_rechargeable_cart()) {
+            if (is_taxi_rechargeable_cart()) {
                 wc_add_notice(apply_filters('woo_taxi_restrict_other_from_add_to_cart', __('You can not add another product while your cart contains with taxi product.', 'taxi-rent')), 'error');
                 $valid = false;
             }
