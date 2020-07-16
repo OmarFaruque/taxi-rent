@@ -347,5 +347,5 @@ div#vaclelist.two_col div.description-desc div.vacle-details > div.price > div{
 }
 
 .additionalService h6 {
-    margin: 0.5rem auto 2.5rem;
+    margin: 0.5rem auto 2.5rem !important;
 }
