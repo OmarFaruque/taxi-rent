@@ -64,17 +64,14 @@ if(!class_exists('taxiClass')){
         * Test function 
         */
         public function addAdditionalMetaTags(){
+            // echo 'Request<pre>';
+            // print_r($_REQUEST);
+            // echo '</pre>';
 
-            echo 'Request<pre>';
-            print_r($_REQUEST);
-            echo '</pre>';
-
-            echo 'Cookies<pre>';
-            print_r($_COOKIE);
-            echo '</pre>';
-
+            // echo 'Cookies<pre>';
+            // print_r($_COOKIE);
+            // echo '</pre>';
             echo '<meta content="width=device-width, initial-scale=1" name="viewport" />';
-            
         }
 
 
