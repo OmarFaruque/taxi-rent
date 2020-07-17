@@ -2,6 +2,17 @@
 /*
 * Booking Form
 */
+
+
+// echo 'Coockis array <br/><pre>';
+// print_r($_COOKIE);
+// echo '</pre>';
+
+// echo 'Coockis array <br/><pre>';
+// print_r($_SESSION);
+// echo '</pre>';
+
+
 ?>
 
 <div id="booking_form_wrap">

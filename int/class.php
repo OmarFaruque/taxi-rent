@@ -51,13 +51,28 @@ if(!class_exists('taxiClass')){
 
             add_action('wp_head', array($this, 'addAdditionalMetaTags'));
 
+            // add_action( 'template_redirect', 'action_woocommerce_cart_redirect_first_Time', 10, 1 ); 
         }
 
+
+
+        /*
+        * Avoid First time redirection
+        */
 
         /*
         * Test function 
         */
         public function addAdditionalMetaTags(){
+
+            echo 'Request<pre>';
+            print_r($_REQUEST);
+            echo '</pre>';
+
+            echo 'Cookies<pre>';
+            print_r($_COOKIE);
+            echo '</pre>';
+
             echo '<meta content="width=device-width, initial-scale=1" name="viewport" />';
             
         }
@@ -201,11 +216,13 @@ if(!class_exists('taxiClass')){
         /*
         * Woocommerce payment process
         */
-        protected function woocommercer_payment_process(){
+        public function woocommercer_payment_process(){
             $product = get_taxi_product();
+            global $woocommerce;
             if ($product) {
                 add_filter('woocommerce_add_cart_item_data', array($this, 'add_taxi_product_price_to_cart_item_data'), 10, 2);
-                wc()->cart->empty_cart();
+                $woocommerce->cart->empty_cart();
+                $woocommerce->session->set( 'cart', array() );
                 $metas = array();
                 $posts = $_POST;              
                
@@ -218,7 +235,7 @@ if(!class_exists('taxiClass')){
                 unset($posts['taxi_rent_amount']);
                 $metas['taxi-meta'] = $posts;
                 
-                wc()->cart->add_to_cart($product->get_id(), 1, '0', array(), $metas);
+                $woocommerce->cart->add_to_cart($product->get_id(), 1, '0', array(), $metas);
 
                 $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
                 // echo 'redirect url: ' . $redirect_url . '<br/>';
