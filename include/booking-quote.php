@@ -14,10 +14,6 @@ if(isset($_REQUEST['taxi_booking_nonce'])){
 
 
 
-// echo '<pre>';
-// print_r($_REQUEST);
-// echo '</pre>';
-
 $collectionAddress = '';
 $distinationAddress = '';
 if(isset($_POST['pickup']))                     $collectionAddress = $_POST['pickup'];

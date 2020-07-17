@@ -4,7 +4,6 @@
 * Local Service Form
 */
 $quote_url = get_the_permalink( get_option('quote_page') );
-
 ?>
 
 <form action="<?php echo $quote_url; ?>" method="post">

@@ -237,6 +237,10 @@ if(!class_exists('taxiClass')){
                 
                 $woocommerce->cart->add_to_cart($product->get_id(), 1, '0', array(), $metas);
 
+                wc_setcookie( 'woocommerce_items_in_cart', 1 );
+                wc_setcookie( 'woocommerce_cart_hash', md5( json_encode( WC()->cart->get_cart() ) ) );
+                do_action( 'woocommerce_set_cart_cookies', true );
+
                 $redirect_url = apply_filters('woo_taxi_redirect_to_checkout_after_added_amount', true) ? wc_get_checkout_url() : wc_get_cart_url();
                 // echo 'redirect url: ' . $redirect_url . '<br/>';
                 echo '<script>window.location.replace("'.$redirect_url.'");</script>';
