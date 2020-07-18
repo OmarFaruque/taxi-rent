@@ -40,3 +40,15 @@ if(!function_exists('get_taxi_product')){
 }
 
 
+if ( ! function_exists( 'update_taxi_partial_payment_session' ) ) {
+    /**
+     * Refresh WooCommerce session for partial payment.
+     * @param boolean $set
+     */
+    function update_taxi_partial_payment_session( $set = false ) {
+        if(!is_null(wc()->session)){
+            wc()->session->set( 'is_taxi_partial_payment', $set );
+        }
+    }
+
+}

@@ -28,7 +28,7 @@ if(!class_exists('taxiClass')){
             //create custom meta box
             add_action( 'init', array($this, 'createNecesaryPostType'));
             add_action('init', array($this, 'my_acf_add_local_field_groups'));
-            add_action('wp_head', array($this, 'paymentFormSubmit'));
+            // add_action('wp_head', array($this, 'paymentFormSubmit'));
 
             // Booking form Shortcode
             add_shortcode( 'taxi-booking', array($this, 'taxiBookingFormShortcodeCallback') );
@@ -50,6 +50,7 @@ if(!class_exists('taxiClass')){
             add_action( 'woocommerce_add_order_item_meta', array($this, 'add_order_item_meta') , 10, 3 );
 
             add_action('wp_head', array($this, 'addAdditionalMetaTags'));
+            add_action('wp_loaded', array($this, 'paymentFormSubmit'), 20);
 
             // add_action( 'template_redirect', 'action_woocommerce_cart_redirect_first_Time', 10, 1 ); 
         }
@@ -266,6 +267,11 @@ if(!class_exists('taxiClass')){
         /*
         */
         public function paymentFormSubmit(){
+            // reset partial payment session
+            if (!is_ajax()) {
+                update_taxi_partial_payment_session();
+            }
+
             if(isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'pay_now'){
                 $this->woocommercer_payment_process();
             }
