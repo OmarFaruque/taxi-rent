@@ -65,13 +65,6 @@ if(!class_exists('taxiClass')){
         * Test function 
         */
         public function addAdditionalMetaTags(){
-            // echo 'Request<pre>';
-            // print_r($_REQUEST);
-            // echo '</pre>';
-
-            // echo 'Cookies<pre>';
-            // print_r($_COOKIE);
-            // echo '</pre>';
             echo '<meta content="width=device-width, initial-scale=1" name="viewport" />';
         }
 
@@ -304,8 +297,6 @@ if(!class_exists('taxiClass')){
         */
         public function taxiBookingFormShortcodeCallback(){
             wp_enqueue_style( 'pe-icon', 'https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css', time(), 'all' );
-            
-            
 
             ob_start();
             require_once( $this->plugin_path . 'include/booking-form.php' );            
@@ -761,10 +752,6 @@ if(!class_exists('taxiClass')){
                 update_option( 'tr_car_select_btn', $tr_car_select_btn);
                 
             }
-
         }
-
-
-
     }
 } //if(!class_exists('taxiClass')){ d f
