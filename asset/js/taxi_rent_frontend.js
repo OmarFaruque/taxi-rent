@@ -123,8 +123,24 @@ jQuery(document).ready(function(){
   * Date picker
   */
   if(jQuery('input#travel_date_time').length){
-    jQuery('input#travel_date_time').datepicker();
+    jQuery('input#travel_date_time').datetimepicker({
+      timeFormat: 'HH:mm',
+      dateFormat: 'mm/dd/yy',
+      step:30
+    });
   }
+
+
+  /*
+  * Return Date picker
+  */
+ if(jQuery('input#return_date_time').length){
+  jQuery('input#return_date_time').datetimepicker({
+    timeFormat: 'HH:mm',
+    dateFormat: 'mm/dd/yy',
+    step:30
+  });
+}
 
   /*
   * Form Validattion 

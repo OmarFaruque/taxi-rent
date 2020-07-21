@@ -223,6 +223,7 @@ if(!class_exists('taxiClass')){
                 unset($posts['_wpnonce']);
                 unset($posts['woocommerce-login-nonce']);
                 unset($posts['submit_type']);
+                unset($posts['pay_now']);
                 unset($posts['taxi_rent_amount']);
                 $metas['taxi-meta'] = $posts;
                 
@@ -347,6 +348,7 @@ if(!class_exists('taxiClass')){
             wp_enqueue_script( 'jquery-ui-tabs' );
             
             wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css', time(), 'all' );
+            wp_enqueue_style( 'xdsoftdatetimepickercss', $this->plugin_url . 'asset/css/jquery.datetimepicker.css', array(), true, 'all' );
             wp_enqueue_style( 'TaxiRentCSS', $this->plugin_url . 'asset/css/taxi_rent_frontend.css', array(), true, 'all' );
             
             
@@ -357,6 +359,7 @@ if(!class_exists('taxiClass')){
             // wp_enqueue_script( 'bootstrap-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', array('jquery'), true );
             
 
+            wp_enqueue_script('xdsoftdatepickerjs', $this->plugin_url . 'asset/js/jquery.datetimepicker.full.min.js', array('jquery'), time(), true);
             wp_enqueue_script('TaxiRentJSs', $this->plugin_url . 'asset/js/taxi_rent_frontend.js', array('jquery'), time(), true);
         }
 

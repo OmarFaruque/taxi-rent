@@ -263,12 +263,25 @@ if(isset($_POST['destination_airport_drop']))  $distinationAddress = $_POST['des
               <div class="row">
 
                 <!-- Travel Date -->
-                <div class="col-md-12 col-xs-12">
+                <?php 
+                  $colwidth = (isset($_POST['way']) && $_POST['way'] == 2) ? '6':'12';
+                ?>
+
+                <div class="col-md-<?php echo $colwidth; ?> col-xs-<?php echo $colwidth; ?>">
                     <div class="form-group">
                       <label for="travel_date_time"><?php _e('Travel Date*', 'taxi_rent'); ?></label>
                       <input type="text" autocomplete="off" name="travel_date_time" id="travel_date_time" class="form-control">
                     </div>
                 </div>
+
+                <?php if($colwidth == '6'): ?>
+                  <div class="col-md-<?php echo $colwidth; ?> col-xs-<?php echo $colwidth; ?>">
+                    <div class="form-group">
+                      <label for="return_date_time"><?php _e('Return Date*', 'taxi_rent'); ?></label>
+                      <input type="text" autocomplete="off" name="return_date_time" id="return_date_time" class="form-control">
+                    </div>
+                  </div>  
+                <?php endif; ?>
 
                 <!-- Collection Address -->
                 <div class="col-md-12 col-xs-12">
