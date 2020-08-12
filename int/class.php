@@ -728,7 +728,10 @@ if(!class_exists('taxiClass')){
             // Add Vat 
             $taxi_vat = get_option('taxi_vat', 0);
             $price += $price * ($taxi_vat / 100);
-            $price = number_format($price, 2);
+            if(is_numeric($price)){
+                $price = number_format($price, 2);
+            }
+            
             return apply_filters( 'the_Vehicle_price', $price );
         }
 
